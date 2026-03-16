@@ -2,556 +2,486 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zaika Biryani | Order Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Modern CSS Reset & Variables (Swiggy Style) */
+        /* --- ANIMATED GLASSMORPHISM THEME VARIABLES --- */
         :root {
-            --primary-color: #fc8019;
-            --secondary-color: #f1faee;
-            --text-dark: #282c3f;
-            --text-muted: #686b78;
-            --bg-color: #f8f9fa;
-            --green: #1ba672;
-            --shadow: 0 4px 14px rgba(0,0,0,0.05);
+            --primary-color: #fc8019; 
+            --bg-gradient-1: #1a1c2c;
+            --bg-gradient-2: #4a192c;
+            --bg-gradient-3: #0f2027;
+            --bg-gradient-4: #2c5364;
+            --glass-bg: rgba(30, 30, 40, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --input-bg: rgba(0, 0, 0, 0.4);
+            --input-border: rgba(255, 255, 255, 0.15);
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --success-color: #4ade80;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #fff; color: var(--text-dark); scroll-behavior: smooth; }
+
+        [data-theme="light"] {
+            --bg-gradient-1: #8EC5FC;
+            --bg-gradient-2: #E0C3FC;
+            --bg-gradient-3: #ffffff;
+            --bg-gradient-4: #D9AFD9;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: #cbd5e1;
+            --btn-bg: rgba(255, 255, 255, 0.5);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --success-color: #1ba672;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            scroll-behavior: smooth; 
+            transition: color 0.3s ease;
+        }
+
+        body.no-scroll { overflow: hidden; }
+
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); box-shadow: 0 8px 32px var(--shadow-color);
+        }
 
         /* Navigation */
         header {
-            background-color: #fff; padding: 1rem 5%; display: flex;
-            justify-content: space-between; align-items: center;
-            box-shadow: var(--shadow); position: sticky; top: 0; z-index: 90;
+            padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 90; border-bottom: 1px solid var(--glass-border);
+            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         }
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: var(--text-dark); 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
         .logo span { color: var(--primary-color); }
-        .brand-logo { 
-            height: 40px; 
-            width: auto; 
-            border-radius: 8px; 
-            object-fit: contain; 
-        }
-        .cart-icon { 
-            cursor: pointer; font-weight: 600; font-size: 1rem;
-            display: flex; align-items: center; gap: 8px;
-        }
+        .brand-logo { height: 36px; width: auto; border-radius: 8px; object-fit: contain; }
+        
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .user-action, .cart-icon { cursor: pointer; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 6px; color: var(--text-primary); padding: 5px;}
+        .cart-icon { position: relative; }
         .cart-icon .count-badge {
-            background: var(--primary-color); color: #fff;
-            padding: 2px 8px; border-radius: 12px; font-size: 0.9rem;
+            background: var(--primary-color); color: #fff; padding: 2px 6px; border-radius: 12px; font-size: 0.8rem;
+        }
+
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary);
         }
 
         /* Hero Section */
         .hero {
-            height: 25vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://placehold.co/1200x600/222/FFF?text=Zaika+Biryani') center/cover;
+            height: 22vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://placehold.co/1200x600/222/FFF?text=Zaika+Biryani') center/cover;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             color: #fff; text-align: center; padding: 2rem; margin: 1rem 5%; border-radius: 20px;
         }
-        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .hero h1 { font-size: 1.8rem; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
 
-        /* --- Category Grid View --- */
+        /* --- Menu Layout --- */
         .menu-wrapper { padding: 0 5% 6rem; max-width: 900px; margin: 0 auto; min-height: 50vh;}
+        .main-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center; font-weight: 700; }
         
-        .main-title { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text-dark); text-align: center; }
-        
-        .big-category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1.5rem;
-        }
-        .big-cat-card {
-            background: #fff; border-radius: 16px; overflow: hidden;
-            box-shadow: var(--shadow); cursor: pointer; transition: 0.3s;
-            text-align: center; border: 1px solid #eee;
-        }
-        .big-cat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .big-cat-card img { width: 100%; height: 120px; object-fit: cover; }
-        .big-cat-card h3 { padding: 1rem 0.5rem; font-size: 1.1rem; color: var(--text-dark); }
+        .big-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
+        .big-cat-card { border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s; text-align: center; }
+        .big-cat-card:active { transform: scale(0.96); }
+        .big-cat-card img { width: 100%; height: 100px; object-fit: cover; border-bottom: 1px solid var(--glass-border);}
+        .big-cat-card h3 { padding: 0.8rem 0.5rem; font-size: 1rem; color: var(--text-primary); font-weight: 600;}
 
-        /* --- Items List View (Hidden by default) --- */
-        #items-view { display: none; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        /* --- Items List View --- */
+        #items-view { display: none; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        .back-header {
-            display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
-            padding-bottom: 1rem; border-bottom: 2px solid #eee;
-        }
-        .back-btn {
-            background: #f4f4f5; border: none; padding: 0.5rem 1rem; border-radius: 8px;
-            font-weight: 600; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 5px;
-        }
-        .back-btn:hover { background: #e2e2e7; }
-        .category-title { font-size: 1.8rem; color: var(--text-dark); }
+        .back-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border); }
+        .back-btn { background: var(--btn-bg); border: 1px solid var(--glass-border); padding: 0.6rem 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 5px;}
+        .category-title { font-size: 1.5rem; color: var(--text-primary); font-weight: 700; }
 
-        /* Item Cards */
-        .item-list-container { display: none; flex-direction: column; gap: 1.5rem; }
+        .item-list-container { display: none; flex-direction: column; gap: 1rem; }
         .item-list-container.active { display: flex; }
-
-        .card {
-            display: flex; justify-content: space-between; background: #fff;
-            border-bottom: 1px dashed #eee; padding-bottom: 1.5rem; transition: 0.3s;
-        }
-        .card:last-child { border-bottom: none; padding-bottom: 0; }
-        .card-content { flex: 1; padding-right: 2rem; }
-        .card-title { font-size: 1.2rem; margin-bottom: 0.3rem; color: var(--text-dark); }
-        .price { font-weight: 600; font-size: 1.05rem; color: var(--text-dark); display: block; margin-bottom: 0.5rem; }
-        .card-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; }
-        .card-image-wrapper { position: relative; width: 130px; height: 110px; border-radius: 12px; flex-shrink: 0; }
-        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        .card { display: flex; justify-content: space-between; padding: 1rem; border-radius: 16px; align-items: center; gap: 10px;}
+        .card-content { flex: 1; }
+        .card-title { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--text-primary); font-weight: 700; line-height: 1.3;}
+        .price { font-weight: 600; font-size: 1rem; color: var(--success-color); display: block; }
+        
+        .card-image-wrapper { position: relative; width: 110px; height: 100px; border-radius: 12px; flex-shrink: 0; }
+        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border);}
         
         .add-btn { 
-            position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
-            background: #fff; color: var(--green); border: 1px solid #d4d5d9; 
-            padding: 0.4rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.9rem;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-transform: uppercase;
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); 
+            background: var(--input-bg); color: var(--primary-color); border: 1px solid var(--glass-border); 
+            padding: 0.4rem 1rem; border-radius: 8px; font-weight: 800; font-size: 0.85rem; 
+            cursor: pointer; backdrop-filter: blur(10px); text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        .add-btn:active { transform: translateX(-50%) scale(0.95); }
 
-        /* Footer */
-        footer { background: var(--text-dark); color: #fff; text-align: center; padding: 3rem 5%; margin-top: 2rem; }
-        footer h2 { margin-bottom: 1rem; color: var(--primary-color); }
+        footer { border-top: 1px solid var(--glass-border); color: var(--text-primary); text-align: center; padding: 2rem 5%; margin-top: 2rem; }
+        footer h2 { margin-bottom: 0.5rem; color: var(--primary-color); font-weight: 800;}
 
-        /* Bottom Sheet Modal Styles */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; flex-direction: column; justify-content: flex-end; }
-        .bottom-sheet { background: #f4f4f5; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 24px 24px 0 0; padding-bottom: 80px; position: relative; animation: slideUp 0.3s ease-out; max-height: 85vh; overflow-y: auto; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header { background: #fff; padding: 1rem 1.5rem; border-radius: 24px 24px 0 0; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .modal-header img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .modal-header h3 { flex: 1; font-size: 1.1rem; }
-        .close-modal-btn { background: #e2e2e7; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; color: #555; }
-        .modal-body { padding: 1.5rem; background: #fff; margin-top: 8px; }
-        .section-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; color: #3e4152; }
-        .section-title span { font-weight: 400; font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 2px; }
-        .option-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px dashed #e9e9eb; cursor: pointer; }
-        .option-row:last-child { border-bottom: none; }
-        .opt-left { display: flex; align-items: center; gap: 12px; }
-        .opt-price { color: #3e4152; font-weight: 500; }
-        input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
-        .tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; border: 1px solid; margin-bottom: 4px; display: inline-block; }
-        .tag.red { color: #e63946; border-color: #e63946; background: #fdf2f2; }
-        .tag.green { color: var(--green); border-color: var(--green); background: #f0fbf6; }
-        .modal-bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: #fff; padding: 1rem 1.5rem; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); display: flex; gap: 1rem; align-items: center; z-index: 3; }
-        .qty-controls { display: flex; align-items: center; justify-content: space-between; border: 1px solid #d4d5d9; border-radius: 8px; padding: 0.5rem; width: 100px; font-weight: bold; color: var(--green); }
-        .qty-controls button { background: none; border: none; font-size: 1.2rem; color: var(--green); cursor: pointer; padding: 0 10px; }
-        .qty-controls span { color: var(--text-dark); }
-        .add-to-cart-btn { flex: 1; background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-align: center; }
+        /* --- Modals --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; }
+        
+        .bottom-sheet { width: 100%; max-width: 600px; margin: 0 auto; border-radius: 24px 24px 0 0; padding-bottom: 90px; position: relative; transform: translateY(100%); transition: transform 0.3s ease; max-height: 85vh; overflow-y: auto; border-bottom: none;}
+        .modal-overlay.active .bottom-sheet { transform: translateY(0); }
+        
+        .centered-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1002; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;}
+        .centered-modal-overlay.active { opacity: 1; }
+        .centered-modal { width: 90%; max-width: 400px; padding: 2rem; border-radius: 24px; transform: scale(0.95); transition: transform 0.3s ease; border: 1px solid var(--glass-border);}
+        .centered-modal-overlay.active .centered-modal { transform: scale(1); }
+        
+        .form-input { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); border-radius: 12px; font-size: 1rem; outline: none;}
+        .primary-btn { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
+        .secondary-btn { width: 100%; background: var(--btn-bg); color: var(--text-primary); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; font-weight: 600; margin-top: 0.5rem; cursor: pointer; }
+        .logout-btn { color: #ff6b6b; border-color: rgba(239, 68, 68, 0.3);}
+
+        /* Modal Specifics */
+        .modal-header { padding: 1rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 2; background: inherit;}
+        .modal-header img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover;}
+        .modal-header h3 { flex: 1; font-size: 1.1rem; color: var(--text-primary); font-weight: 700;}
+        .close-modal-btn { background: var(--btn-bg); border: 1px solid var(--glass-border); width: 36px; height: 36px; border-radius: 50%; font-weight: bold; cursor: pointer; color: var(--text-primary); display: flex; justify-content: center; align-items: center;}
+        
+        .modal-body { padding: 1rem; margin-top: 5px; }
+        .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; color: var(--text-primary); }
+        .option-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.5rem; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px;}
+        .opt-left { display: flex; align-items: center; gap: 12px; color: var(--text-primary); font-weight: 500;}
+        input[type="radio"], input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--primary-color); }
+        
+        .tag { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin-bottom: 4px; display: inline-block; }
+        .tag.red { color: #ff6b6b; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);}
+        
+        .modal-bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; padding: 1rem; border-top: 1px solid var(--glass-border); display: flex; gap: 1rem; align-items: center; z-index: 3; background: inherit; backdrop-filter: blur(20px);}
+        .qty-controls { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--input-border); background: var(--input-bg); border-radius: 12px; padding: 0.5rem; width: 110px; font-weight: bold; color: var(--text-primary); }
+        .qty-controls button { background: none; border: none; font-size: 1.4rem; color: var(--primary-color); cursor: pointer; padding: 0 10px; height: 100%;}
+        .add-to-cart-btn { flex: 1; background: var(--success-color); color: #fff; border: none; border-radius: 12px; padding: 1rem; font-size: 1.05rem; font-weight: 700; cursor: pointer; text-align: center; }
 
         /* Cart Sidebar */
-        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 100%; max-width: 350px; height: 100vh; background: #fff; box-shadow: -4px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 1001; display: flex; flex-direction: column; }
+        .cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; border-left: 1px solid var(--glass-border); transition: right 0.3s ease; z-index: 1001; display: flex; flex-direction: column; background: inherit; backdrop-filter: blur(20px); }
         .cart-sidebar.open { right: 0; }
-        .cart-header { padding: 1.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #eee; }
-        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
-        .cart-item-info p { font-size: 0.8rem; color: var(--text-muted); }
-        .cart-item-price { font-weight: 600; }
-        .cart-footer { padding: 1.5rem; border-top: 1px solid #eee; background: #f8f9fa; }
-        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
-        .checkout-btn { width: 100%; background: var(--green); color: #fff; border: none; padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        .cart-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; }
+        .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; color: var(--text-primary); font-weight: 800; font-size: 1.2rem;}
+        .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 1rem; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px;}
+        .cart-item-info h4 { font-size: 1rem; margin-bottom: 0.2rem; color: var(--text-primary); font-weight: 600;}
+        .cart-item-price { font-weight: 700; color: var(--success-color); text-align: right;}
+        
+        .cart-footer { padding: 1.5rem; border-top: 1px solid var(--glass-border); }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary);}
+        .checkout-btn { width: 100%; background: var(--success-color); color: #fff; border: none; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer;}
+        
+        .order-history-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 1.2rem; margin-top: 1.5rem; text-align: left; max-height: 250px; overflow-y: auto;}
+        
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .header-text { display: none; }
+            .user-action i, .cart-icon i { font-size: 1.3rem; }
+            .logo { font-size: 1.3rem; }
+            .brand-logo { height: 30px; }
+            .hero h1 { font-size: 1.5rem; }
+            .big-category-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-image-wrapper { width: 90px; height: 90px; }
+            .add-btn { font-size: 0.8rem; padding: 0.3rem 0.8rem; }
+        }
     </style>
 </head>
 <body>
+
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+    </script>
 
     <header>
         <div class="logo">
             <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika Logo" class="brand-logo">
             Zaika <span>Biryani</span>
         </div>
-        <div class="cart-icon" onclick="toggleCart()">
-            🛒 Cart <span class="count-badge" id="cart-count">0</span>
+        <div class="header-actions">
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i> <span class="header-text">Cart</span> <span class="count-badge" id="cart-count">0</span>
+            </div>
+            <div class="theme-toggle" id="themeBtn">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="user-action" onclick="handleUserClick()">
+                <i class="fas fa-user-circle"></i> <span class="header-text" id="header-user-name">Login</span>
+            </div>
         </div>
     </header>
 
-    <section class="hero">
+    <section class="hero glass">
         <h1>What's on your mind?</h1>
     </section>
 
     <div class="menu-wrapper">
-        
         <div id="category-view">
             <h2 class="main-title">Explore Our Menu</h2>
             <div class="big-category-grid">
-                <div class="big-cat-card" onclick="openCategory('list-biryani', 'Biryani')">
-                    <img src="https://i.ibb.co/pVbmkGL/biryani.jpg" alt="Biryani">
-                    <h3>Biryani</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-roll', 'Rolls')">
-                    <img src="https://i.ibb.co/d0c5XbJC/roll.webp" alt="Rolls">
-                    <h3>Roll</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-noodles', 'Noodles')">
-                    <img src="https://i.ibb.co/HDsD6YWz/noodles.webp" alt="Noodles">
-                    <h3>Noodles</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-chilly', 'Chilly 🌶')">
-                    <img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" alt="Chilly">
-                    <h3>Chilly 🌶</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-combo', 'Combos')">
-                    <img src="https://i.ibb.co/bRJ0xqxT/Manchurian.webp" alt="Combo">
-                    <h3>Combo</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-roti', 'Roti')">
-                    <img src="https://i.ibb.co/fzbCsxMW/Paratha.jpg" alt="Roti">
-                    <h3>Roti</h3>
-                </div>
-                <div class="big-cat-card" onclick="openCategory('list-drinks', 'Drinks')">
-                    <img src="https://i.ibb.co/84TJfH5G/drink.jpg" alt="Drinks">
-                    <h3>Drinks</h3>
-                </div>
+                <div class="big-cat-card glass" onclick="openCategory('list-biryani', 'Biryani')"><img src="https://i.ibb.co/pVbmkGL/biryani.jpg" alt="Biryani"><h3>Biryani</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-roll', 'Rolls')"><img src="https://i.ibb.co/d0c5XbJC/roll.webp" alt="Rolls"><h3>Roll</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-noodles', 'Noodles')"><img src="https://i.ibb.co/HDsD6YWz/noodles.webp" alt="Noodles"><h3>Noodles</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-chilly', 'Chilly 🌶')"><img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" alt="Chilly"><h3>Chilly 🌶</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-combo', 'Combos')"><img src="https://i.ibb.co/bRJ0xqxT/Manchurian.webp" alt="Combo"><h3>Combo</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-roti', 'Roti')"><img src="https://i.ibb.co/fzbCsxMW/Paratha.jpg" alt="Roti"><h3>Roti</h3></div>
+                <div class="big-cat-card glass" onclick="openCategory('list-drinks', 'Drinks')"><img src="https://i.ibb.co/84TJfH5G/drink.jpg" alt="Drinks"><h3>Drinks</h3></div>
             </div>
         </div>
 
         <div id="items-view">
             <div class="back-header">
-                <button class="back-btn" onclick="goBack()">← Back</button>
+                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
                 <h2 class="category-title" id="dynamic-category-title">Category Name</h2>
             </div>
 
             <div class="item-list-container" id="list-biryani">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chicken Biryani</h3>
-                        <span class="price">₹180.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Biryani" alt="Chicken Biryani">
-                        <button class="add-btn" onclick="openModal('Chicken Biryani', 180.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Veg Biryani</h3>
-                        <span class="price">₹140.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Biryani" alt="Veg Biryani">
-                        <button class="add-btn" onclick="openModal('Veg Biryani', 140.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Paneer Biryani</h3>
-                        <span class="price">₹160.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Biryani" alt="Paneer Biryani">
-                        <button class="add-btn" onclick="openModal('Paneer Biryani', 160.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Biryani</h3><span class="price">₹180.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Biryani" alt="Chicken Biryani"><button class="add-btn" onclick="openModal('Chicken Biryani', 180.00, this, 'biryani')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Biryani</h3><span class="price">₹140.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Biryani" alt="Veg Biryani"><button class="add-btn" onclick="openModal('Veg Biryani', 140.00, this, 'biryani')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Biryani</h3><span class="price">₹160.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Biryani" alt="Paneer Biryani"><button class="add-btn" onclick="openModal('Paneer Biryani', 160.00, this, 'biryani')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-roll">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Egg Roll</h3>
-                        <span class="price">₹50.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Egg+Roll" alt="Egg Roll">
-                        <button class="add-btn" onclick="openModal('Egg Roll', 50.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Veg Roll</h3>
-                        <span class="price">₹40.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Roll" alt="Veg Roll">
-                        <button class="add-btn" onclick="openModal('Veg Roll', 40.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Paneer Roll</h3>
-                        <span class="price">₹70.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Roll" alt="Paneer Roll">
-                        <button class="add-btn" onclick="openModal('Paneer Roll', 70.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chicken Roll</h3>
-                        <span class="price">₹80.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Roll" alt="Chicken Roll">
-                        <button class="add-btn" onclick="openModal('Chicken Roll', 80.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Egg Roll</h3><span class="price">₹50.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Egg+Roll" alt="Egg Roll"><button class="add-btn" onclick="openModal('Egg Roll', 50.00, this, 'roll')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Roll</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Roll" alt="Veg Roll"><button class="add-btn" onclick="openModal('Veg Roll', 40.00, this, 'roll')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Roll</h3><span class="price">₹70.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Roll" alt="Paneer Roll"><button class="add-btn" onclick="openModal('Paneer Roll', 70.00, this, 'roll')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Roll</h3><span class="price">₹80.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Roll" alt="Chicken Roll"><button class="add-btn" onclick="openModal('Chicken Roll', 80.00, this, 'roll')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-noodles">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Veg Noodles</h3>
-                        <span class="price">₹90.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Noodles" alt="Veg Noodles">
-                        <button class="add-btn" onclick="openModal('Veg Noodles', 90.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Paneer Noodle</h3>
-                        <span class="price">₹110.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Noodle" alt="Paneer Noodle">
-                        <button class="add-btn" onclick="openModal('Paneer Noodle', 110.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chicken Noodle</h3>
-                        <span class="price">₹130.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Noodle" alt="Chicken Noodle">
-                        <button class="add-btn" onclick="openModal('Chicken Noodle', 130.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Noodles</h3><span class="price">₹90.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Noodles" alt="Veg Noodles"><button class="add-btn" onclick="openModal('Veg Noodles', 90.00, this, 'noodle')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Noodle</h3><span class="price">₹110.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Noodle" alt="Paneer Noodle"><button class="add-btn" onclick="openModal('Paneer Noodle', 110.00, this, 'noodle')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Noodle</h3><span class="price">₹130.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Noodle" alt="Chicken Noodle"><button class="add-btn" onclick="openModal('Chicken Noodle', 130.00, this, 'noodle')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-chilly">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Paneer Chilly</h3>
-                        <span class="price">₹140.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Chilly" alt="Paneer Chilly">
-                        <button class="add-btn" onclick="openModal('Paneer Chilly', 140.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chicken Chilly</h3>
-                        <span class="price">₹160.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Chilly" alt="Chicken Chilly">
-                        <button class="add-btn" onclick="openModal('Chicken Chilly', 160.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Chilly</h3><span class="price">₹140.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Chilly" alt="Paneer Chilly"><button class="add-btn" onclick="openModal('Paneer Chilly', 140.00, this, 'chilly')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Chilly</h3><span class="price">₹160.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Chilly" alt="Chicken Chilly"><button class="add-btn" onclick="openModal('Chicken Chilly', 160.00, this, 'chilly')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-combo">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chicken Lollipop Boneless</h3>
-                        <span class="price">₹150.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Lollipop" alt="Chicken Lollipop">
-                        <button class="add-btn" onclick="openModal('Chicken Lollipop Boneless', 150.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Manchurian</h3>
-                        <span class="price">₹120.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Manchurian" alt="Manchurian">
-                        <button class="add-btn" onclick="openModal('Manchurian', 120.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Lollipop Boneless</h3><span class="price">₹150.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Lollipop" alt="Chicken Lollipop"><button class="add-btn" onclick="openModal('Chicken Lollipop Boneless', 150.00, this, 'combo')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Manchurian</h3><span class="price">₹120.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Manchurian" alt="Manchurian"><button class="add-btn" onclick="openModal('Manchurian', 120.00, this, 'combo')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-roti">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Laccha Paratha</h3>
-                        <span class="price">₹30.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Laccha+Paratha" alt="Laccha Paratha">
-                        <button class="add-btn" onclick="openModal('Laccha Paratha', 30.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Paratha</h3>
-                        <span class="price">₹20.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Paratha" alt="Paratha">
-                        <button class="add-btn" onclick="openModal('Paratha', 20.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Butter Paratha</h3>
-                        <span class="price">₹25.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Butter+Paratha" alt="Butter Paratha">
-                        <button class="add-btn" onclick="openModal('Butter Paratha', 25.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Laccha Paratha</h3><span class="price">₹30.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Laccha+Paratha" alt="Laccha Paratha"><button class="add-btn" onclick="openModal('Laccha Paratha', 30.00, this, 'roti')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Paratha</h3><span class="price">₹20.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paratha" alt="Paratha"><button class="add-btn" onclick="openModal('Paratha', 20.00, this, 'roti')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Butter Paratha</h3><span class="price">₹25.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Butter+Paratha" alt="Butter Paratha"><button class="add-btn" onclick="openModal('Butter Paratha', 25.00, this, 'roti')">ADD</button></div></div>
             </div>
 
             <div class="item-list-container" id="list-drinks">
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Pepsi</h3>
-                        <span class="price">₹40.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Pepsi" alt="Pepsi">
-                        <button class="add-btn" onclick="openModal('Pepsi', 40.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Coke</h3>
-                        <span class="price">₹40.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Coke" alt="Coke">
-                        <button class="add-btn" onclick="openModal('Coke', 40.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Sprite</h3>
-                        <span class="price">₹40.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Sprite" alt="Sprite">
-                        <button class="add-btn" onclick="openModal('Sprite', 40.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Dew</h3>
-                        <span class="price">₹40.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Dew" alt="Dew">
-                        <button class="add-btn" onclick="openModal('Dew', 40.00, this)">ADD</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3 class="card-title">Lassi</h3>
-                        <span class="price">₹50.00</span>
-                    </div>
-                    <div class="card-image-wrapper">
-                        <img src="https://placehold.co/600x400/eee/999?text=Lassi" alt="Lassi">
-                        <button class="add-btn" onclick="openModal('Lassi', 50.00, this)">ADD</button>
-                    </div>
-                </div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Pepsi</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Pepsi" alt="Pepsi"><button class="add-btn" onclick="openModal('Pepsi', 40.00, this, 'drink')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Coke</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Coke" alt="Coke"><button class="add-btn" onclick="openModal('Coke', 40.00, this, 'drink')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Sprite</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Sprite" alt="Sprite"><button class="add-btn" onclick="openModal('Sprite', 40.00, this, 'drink')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Dew</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Dew" alt="Dew"><button class="add-btn" onclick="openModal('Dew', 40.00, this, 'drink')">ADD</button></div></div>
+                <div class="card glass"><div class="card-content"><h3 class="card-title">Lassi</h3><span class="price">₹50.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Lassi" alt="Lassi"><button class="add-btn" onclick="openModal('Lassi', 50.00, this, 'drink')">ADD</button></div></div>
             </div>
-
         </div> 
     </div> 
     
     <footer>
         <h2>Zaika Biryani</h2>
         <p>Station Road Sonpur , Saran , Bihar</p>
-        <p>Call us: +91 73690 62084</p>
     </footer>
 
     <div id="item-modal" class="modal-overlay">
-        <div class="bottom-sheet">
+        <div class="bottom-sheet glass">
             <div class="modal-header">
                 <img id="modal-img" src="" alt="Item">
                 <h3 id="modal-name">Item Name</h3>
-                <button class="close-modal-btn" onclick="closeModal()">✕</button>
+                <button class="close-modal-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             
-            <div class="modal-body">
+            <div class="modal-body" id="portion-section">
                 <div class="section-title">Quantity <span>Select any 1</span></div>
                 <label class="option-row">
-                    <div class="opt-left">
-                        <input type="radio" name="portion" id="radio-mini" value="Mini" onchange="calculateModalTotal()">
-                        <div>Mini <span style="font-size: 0.8rem; color: #686b78;">(Half)</span></div>
-                    </div>
+                    <div class="opt-left"><input type="radio" name="portion" id="radio-mini" value="Mini" onchange="calculateModalTotal()"><div>Mini <span style="font-size: 0.8rem; color: var(--text-secondary);">(Half)</span></div></div>
                     <div class="opt-price">₹<span id="price-mini">0</span></div>
                 </label>
                 <label class="option-row">
-                    <div class="opt-left">
-                        <input type="radio" name="portion" id="radio-regular" value="Regular" checked onchange="calculateModalTotal()">
-                        <div>Regular <span style="font-size: 0.8rem; color: #686b78;">(Full)</span></div>
-                    </div>
+                    <div class="opt-left"><input type="radio" name="portion" id="radio-regular" value="Regular" checked onchange="calculateModalTotal()"><div>Regular <span style="font-size: 0.8rem; color: var(--text-secondary);">(Full)</span></div></div>
                     <div class="opt-price">₹<span id="price-regular">0</span></div>
                 </label>
             </div>
 
-            <div class="modal-body">
-                <div class="section-title">Add Ons <span>Select upto 3</span></div>
+            <div class="modal-body" id="addon-section">
+                <div class="section-title">Add Ons</div>
                 <label class="option-row">
-                    <div class="opt-left">
-                        <input type="checkbox" class="addon-cb" value="Raita" data-price="10" onchange="calculateModalTotal()">
-                        <div><span class="tag green">Bestseller</span><br>Raita</div>
-                    </div>
-                    <div class="opt-price">+ ₹10</div>
-                </label>
-                <label class="option-row">
-                    <div class="opt-left">
-                        <input type="checkbox" class="addon-cb" value="Egg" data-price="20" onchange="calculateModalTotal()">
-                        <div><span class="tag red">Protein Rich</span><br>Egg [1 Pc]</div>
-                    </div>
+                    <div class="opt-left"><input type="checkbox" class="addon-cb" value="Egg" data-price="20" onchange="calculateModalTotal()"><div><span class="tag red">Protein Rich</span><br>Egg [1 Pc]</div></div>
                     <div class="opt-price">+ ₹20</div>
                 </label>
             </div>
 
             <div class="modal-bottom-bar">
-                <div class="qty-controls">
-                    <button onclick="changeModalQty(-1)">-</button>
-                    <span id="modal-qty">1</span>
-                    <button onclick="changeModalQty(1)">+</button>
-                </div>
-                <button class="add-to-cart-btn" onclick="confirmAddToCart()">
-                    Add Item | ₹<span id="modal-btn-total">0</span>
-                </button>
+                <div class="qty-controls"><button onclick="changeModalQty(-1)">-</button><span id="modal-qty">1</span><button onclick="changeModalQty(1)">+</button></div>
+                <button class="add-to-cart-btn" onclick="confirmAddToCart()">Add Item | ₹<span id="modal-btn-total">0</span></button>
             </div>
         </div>
     </div>
 
     <div class="cart-backdrop" id="cart-backdrop" onclick="toggleCart()"></div>
-    <div class="cart-sidebar" id="cart-sidebar">
-        <div class="cart-header">
-            <h2>Cart</h2>
-            <button style="background:none; border:none; font-size:1.5rem; cursor:pointer;" onclick="toggleCart()">&times;</button>
-        </div>
+    <div class="cart-sidebar glass" id="cart-sidebar">
+        <div class="cart-header"><h2>Cart</h2><button style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: var(--text-primary);" onclick="toggleCart()">&times;</button></div>
         <div class="cart-items" id="cart-items-container"></div>
         <div class="cart-footer">
             <div class="cart-total-row"><span>Subtotal</span><span>₹<span id="cart-total-price">0.00</span></span></div>
-            <button class="checkout-btn" onclick="alert('Proceeding to Checkout!')">CHECKOUT</button>
+            <button class="checkout-btn" onclick="processCheckout()">PLACE ORDER</button>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="centered-modal-overlay">
+        <div class="centered-modal glass">
+            <h2>Welcome to Zaika!</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="auth-name" class="form-input" placeholder="Full Name" required>
+                <input type="tel" id="auth-mobile" class="form-input" placeholder="Mobile Number" required>
+                <input type="email" id="auth-email" class="form-input" placeholder="Email ID" required>
+                <button type="submit" class="primary-btn">Sign In</button>
+                <button type="button" class="secondary-btn" onclick="closeAuthModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="centered-modal-overlay">
+        <div class="centered-modal glass" style="text-align: center;">
+            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"><i class="fas fa-user-circle"></i></div>
+            <h2 style="margin-bottom: 0.5rem;" id="prof-name-display">Name</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;" id="prof-email-display"></p>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;" id="prof-mobile-display"></p>
+            
+            <div class="order-history-card">
+                <h4><i class="fas fa-history"></i> Recent Orders (Last 3 Months)</h4>
+                <div id="last-order-content"></div>
+            </div>
+
+            <button class="secondary-btn logout-btn" style="margin-top: 1.5rem;" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <button class="secondary-btn" onclick="closeProfileModal()">Close</button>
         </div>
     </div>
 
     <script>
-        // --- CATEGORY SWITCHING LOGIC ---
+        // --- THEME TOGGLE ---
+        const themeBtn = document.getElementById('themeBtn');
+        const themeIcon = themeBtn.querySelector('i');
+        
+        function updateThemeIcon(theme) {
+            if (theme === 'light') { themeIcon.classList.replace('fa-moon', 'fa-sun'); } 
+            else { themeIcon.classList.replace('fa-sun', 'fa-moon'); }
+        }
+        updateThemeIcon(document.body.getAttribute('data-theme'));
+
+        themeBtn.addEventListener('click', () => {
+            const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        // --- ORDER HISTORY CLEANUP ---
+        function cleanOldOrders(historyArray) {
+            if (!Array.isArray(historyArray)) return [];
+            const ninetyDaysInMillis = 90 * 24 * 60 * 60 * 1000; 
+            const now = Date.now();
+            return historyArray.filter(order => (now - order.timestamp) <= ninetyDaysInMillis);
+        }
+
+        // --- AUTH & PROFILE ---
+        let currentUser = JSON.parse(localStorage.getItem('zaikaUser')) || null;
+        let orderHistory = JSON.parse(localStorage.getItem('zaikaOrderHistory')) || [];
+
+        window.onload = () => updateHeaderUser();
+
+        function updateHeaderUser() {
+            document.getElementById('header-user-name').innerText = currentUser ? currentUser.name.split(' ')[0] : 'Login';
+        }
+
+        function handleUserClick() { currentUser ? showProfileModal() : showAuthModal(); }
+
+        function showAuthModal() { 
+            document.body.classList.add('no-scroll');
+            document.getElementById('auth-modal').style.display = 'flex'; 
+            setTimeout(() => document.getElementById('auth-modal').classList.add('active'), 10);
+        }
+        function closeAuthModal() { 
+            document.body.classList.remove('no-scroll');
+            document.getElementById('auth-modal').classList.remove('active');
+            setTimeout(() => document.getElementById('auth-modal').style.display = 'none', 300);
+        }
+        
+        function showProfileModal() { 
+            document.body.classList.add('no-scroll');
+            document.getElementById('prof-name-display').innerText = currentUser.name;
+            document.getElementById('prof-email-display').innerText = currentUser.email;
+            document.getElementById('prof-mobile-display').innerText = "+91 " + currentUser.mobile;
+
+            orderHistory = cleanOldOrders(orderHistory);
+            let orderContainer = document.getElementById('last-order-content');
+            
+            if (orderHistory.length > 0) {
+                let historyHtml = '';
+                [...orderHistory].reverse().forEach(order => {
+                    let itemsHtml = order.items.map(item => `${item.qty}x ${item.name}`).join('<br>');
+                    historyHtml += `
+                        <div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
+                            <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.5;">${itemsHtml}</div>
+                            <div style="font-weight: 700; color: var(--success-color); font-size: 1rem;">Total: ₹${order.total.toFixed(2)}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 5px;">${order.date}</div>
+                        </div>`;
+                });
+                orderContainer.innerHTML = historyHtml;
+            } else {
+                orderContainer.innerHTML = "<p style='font-size: 0.85rem; color: var(--text-secondary);'>No orders in the last 3 months.</p>";
+            }
+
+            document.getElementById('profile-modal').style.display = 'flex'; 
+            setTimeout(() => document.getElementById('profile-modal').classList.add('active'), 10);
+        }
+        function closeProfileModal() { 
+            document.body.classList.remove('no-scroll');
+            document.getElementById('profile-modal').classList.remove('active');
+            setTimeout(() => document.getElementById('profile-modal').style.display = 'none', 300);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            currentUser = { 
+                name: document.getElementById('auth-name').value, 
+                mobile: document.getElementById('auth-mobile').value, 
+                email: document.getElementById('auth-email').value 
+            };
+            localStorage.setItem('zaikaUser', JSON.stringify(currentUser));
+            updateHeaderUser(); closeAuthModal(); alert(`Welcome back!`);
+        }
+
+        function handleLogout() {
+            currentUser = null; localStorage.removeItem('zaikaUser');
+            updateHeaderUser(); closeProfileModal(); alert("Logged out successfully.");
+        }
+
+        // --- UI NAVIGATION ---
         function openCategory(listId, categoryName) {
             document.getElementById('category-view').style.display = 'none';
             document.getElementById('items-view').style.display = 'block';
-            
             document.getElementById('dynamic-category-title').innerText = categoryName;
-
-            let allLists = document.querySelectorAll('.item-list-container');
-            allLists.forEach(list => list.classList.remove('active'));
-            
+            document.querySelectorAll('.item-list-container').forEach(list => list.classList.remove('active'));
             document.getElementById(listId).classList.add('active');
-            
-            document.querySelector('.menu-wrapper').scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function goBack() {
             document.getElementById('items-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'block';
@@ -559,35 +489,44 @@
 
         // --- CART & MODAL LOGIC ---
         let cart = [];
-        let cartTotal = 0;
         let currentItem = null;
         let baseFullPrice = 0;
         let currentModalQty = 1;
+        let currentCategory = ''; 
+        let currentUnitPrice = 0; // Used for grouping cart items
 
-        function openModal(name, price, btnElement) {
-            currentItem = name;
-            baseFullPrice = price;
-            currentModalQty = 1;
+        function openModal(name, price, btnElement, category) {
+            document.body.classList.add('no-scroll');
+            currentItem = name; baseFullPrice = price; currentModalQty = 1; currentCategory = category;
             
-            let cardImage = btnElement.closest('.card').querySelector('img').src;
-            document.getElementById('modal-img').src = cardImage;
+            document.getElementById('modal-img').src = btnElement.closest('.card').querySelector('img').src;
             document.getElementById('modal-name').innerText = name;
             
-            let miniPrice = (price / 2).toFixed(2);
-            document.getElementById('price-regular').innerText = price.toFixed(2);
-            document.getElementById('price-mini').innerText = miniPrice;
+            if (category === 'biryani') {
+                document.getElementById('portion-section').style.display = 'block';
+                document.getElementById('addon-section').style.display = 'block';
+                document.getElementById('price-regular').innerText = price.toFixed(2);
+                document.getElementById('price-mini').innerText = (price / 2).toFixed(2);
+            } else {
+                document.getElementById('portion-section').style.display = 'none';
+                document.getElementById('addon-section').style.display = 'none';
+            }
             
             document.getElementById('radio-regular').checked = true;
             document.getElementById('modal-qty').innerText = currentModalQty;
-            let checkboxes = document.querySelectorAll('.addon-cb');
-            checkboxes.forEach(cb => cb.checked = false);
+            document.querySelectorAll('.addon-cb').forEach(cb => cb.checked = false);
 
             calculateModalTotal();
-            document.getElementById('item-modal').style.display = 'flex';
+            const modal = document.getElementById('item-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
         }
 
-        function closeModal() {
-            document.getElementById('item-modal').style.display = 'none';
+        function closeModal() { 
+            document.body.classList.remove('no-scroll');
+            const modal = document.getElementById('item-modal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
         }
 
         function changeModalQty(change) {
@@ -601,29 +540,36 @@
         function calculateModalTotal() {
             let itemPrice = document.getElementById('radio-regular').checked ? baseFullPrice : baseFullPrice / 2;
             let addonsTotal = 0;
-            document.querySelectorAll('.addon-cb:checked').forEach(cb => {
-                addonsTotal += parseFloat(cb.getAttribute('data-price'));
-            });
-            let finalPrice = (itemPrice + addonsTotal) * currentModalQty;
-            document.getElementById('modal-btn-total').innerText = finalPrice.toFixed(2);
+            if (currentCategory === 'biryani') {
+                document.querySelectorAll('.addon-cb:checked').forEach(cb => { addonsTotal += parseFloat(cb.getAttribute('data-price')); });
+            }
+            
+            currentUnitPrice = itemPrice + addonsTotal;
+            document.getElementById('modal-btn-total').innerText = (currentUnitPrice * currentModalQty).toFixed(2);
         }
 
         function confirmAddToCart() {
-            let size = document.getElementById('radio-regular').checked ? "Regular" : "Mini";
-            let selectedAddons = [];
-            document.querySelectorAll('.addon-cb:checked').forEach(cb => {
-                selectedAddons.push(cb.value);
-            });
-            let finalName = `${currentItem} (${size})`;
-            if (selectedAddons.length > 0) finalName += ` + ${selectedAddons.join(', ')}`;
-            let finalPrice = parseFloat(document.getElementById('modal-btn-total').innerText);
-
-            cart.push({ name: finalName, price: finalPrice, qty: currentModalQty });
-            cartTotal += finalPrice;
-            document.getElementById('cart-count').innerText = cart.length;
+            let finalName = currentItem;
+            if (currentCategory === 'biryani') {
+                let size = document.getElementById('radio-regular').checked ? "Regular" : "Mini";
+                finalName += ` (${size})`;
+                let selectedAddons = [];
+                document.querySelectorAll('.addon-cb:checked').forEach(cb => { selectedAddons.push(cb.value); });
+                if (selectedAddons.length > 0) finalName += ` + ${selectedAddons.join(', ')}`;
+            }
             
-            closeModal();
-            renderCart();
+            // Smart Grouping: Check if exact item already exists in cart
+            let existingItem = cart.find(i => i.name === finalName);
+            if (existingItem) {
+                existingItem.qty += currentModalQty;
+            } else {
+                cart.push({ name: finalName, unitPrice: currentUnitPrice, qty: currentModalQty });
+            }
+            
+            closeModal(); updateCartUI();
+            
+            // Open Cart Drawer
+            document.body.classList.add('no-scroll');
             document.getElementById('cart-sidebar').classList.add('open');
             document.getElementById('cart-backdrop').style.display = 'block';
         }
@@ -632,36 +578,63 @@
             const sidebar = document.getElementById('cart-sidebar');
             const backdrop = document.getElementById('cart-backdrop');
             if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                backdrop.style.display = 'none';
+                sidebar.classList.remove('open'); backdrop.style.display = 'none';
+                document.body.classList.remove('no-scroll');
             } else {
-                sidebar.classList.add('open');
-                backdrop.style.display = 'block';
-                renderCart();
+                sidebar.classList.add('open'); backdrop.style.display = 'block';
+                document.body.classList.add('no-scroll'); updateCartUI();
             }
         }
 
-        function renderCart() {
+        function updateCartUI() {
             const container = document.getElementById('cart-items-container');
-            const totalEl = document.getElementById('cart-total-price');
+            let total = 0; let totalItems = 0;
+            
             if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #686b78; margin-top: 20px;">Your cart is empty</p>';
-                totalEl.innerText = "0.00";
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Your cart is empty</p>';
+                document.getElementById('cart-total-price').innerText = "0.00";
+                document.getElementById('cart-count').innerText = 0;
                 return;
             }
+            
             let html = '';
             cart.forEach(item => {
+                let lineTotal = item.unitPrice * item.qty;
+                total += lineTotal;
+                totalItems += item.qty;
                 html += `
                 <div class="cart-item">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>Qty: ${item.qty}</p>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 0.95rem; margin-bottom: 0.3rem; color: var(--text-primary); font-weight: 600;">${item.name}</h4>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">₹${item.unitPrice.toFixed(2)} x ${item.qty}</div>
                     </div>
-                    <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+                    <div style="font-weight: 700; color: var(--success-color);">₹${lineTotal.toFixed(2)}</div>
                 </div>`;
             });
             container.innerHTML = html;
-            totalEl.innerText = cartTotal.toFixed(2);
+            document.getElementById('cart-total-price').innerText = total.toFixed(2);
+            document.getElementById('cart-count').innerText = cart.length; // Or totalItems if you prefer counting individual bowls
+        }
+
+        function processCheckout() {
+            if (cart.length === 0) return alert("Your cart is empty!");
+            if (!currentUser) {
+                toggleCart(); showAuthModal(); return;
+            }
+
+            // Calculate final total to save
+            let finalTotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+
+            let orderDetails = {
+                id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleString(),
+                items: [...cart], total: finalTotal
+            };
+            
+            orderHistory.push(orderDetails);
+            localStorage.setItem('zaikaOrderHistory', JSON.stringify(cleanOldOrders(orderHistory)));
+
+            alert("🎉 Order placed successfully!");
+            cart = []; updateCartUI(); toggleCart(); 
         }
     </script>
 </body>
