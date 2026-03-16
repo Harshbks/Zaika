@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zaika Biryani | Order Online</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#fc8019">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -375,6 +382,17 @@
     </div>
 
     <script>
+        // --- PWA SERVICE WORKER REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('PWA ServiceWorker registered', reg);
+                }).catch(err => {
+                    console.log('PWA ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
         // --- THEME TOGGLE ---
         const themeBtn = document.getElementById('themeBtn');
         const themeIcon = themeBtn.querySelector('i');
@@ -493,7 +511,7 @@
         let baseFullPrice = 0;
         let currentModalQty = 1;
         let currentCategory = ''; 
-        let currentUnitPrice = 0; // Used for grouping cart items
+        let currentUnitPrice = 0;
 
         function openModal(name, price, btnElement, category) {
             document.body.classList.add('no-scroll');
@@ -558,7 +576,6 @@
                 if (selectedAddons.length > 0) finalName += ` + ${selectedAddons.join(', ')}`;
             }
             
-            // Smart Grouping: Check if exact item already exists in cart
             let existingItem = cart.find(i => i.name === finalName);
             if (existingItem) {
                 existingItem.qty += currentModalQty;
@@ -568,7 +585,6 @@
             
             closeModal(); updateCartUI();
             
-            // Open Cart Drawer
             document.body.classList.add('no-scroll');
             document.getElementById('cart-sidebar').classList.add('open');
             document.getElementById('cart-backdrop').style.display = 'block';
@@ -588,7 +604,7 @@
 
         function updateCartUI() {
             const container = document.getElementById('cart-items-container');
-            let total = 0; let totalItems = 0;
+            let total = 0;
             
             if (cart.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Your cart is empty</p>';
@@ -601,7 +617,6 @@
             cart.forEach(item => {
                 let lineTotal = item.unitPrice * item.qty;
                 total += lineTotal;
-                totalItems += item.qty;
                 html += `
                 <div class="cart-item">
                     <div style="flex: 1;">
@@ -613,7 +628,7 @@
             });
             container.innerHTML = html;
             document.getElementById('cart-total-price').innerText = total.toFixed(2);
-            document.getElementById('cart-count').innerText = cart.length; // Or totalItems if you prefer counting individual bowls
+            document.getElementById('cart-count').innerText = cart.length; 
         }
 
         function processCheckout() {
@@ -622,9 +637,7 @@
                 toggleCart(); showAuthModal(); return;
             }
 
-            // Calculate final total to save
             let finalTotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
-
             let orderDetails = {
                 id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleString(),
                 items: [...cart], total: finalTotal
