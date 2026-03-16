@@ -1,763 +1,620 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zaika Biryani | Order Online</title>
+    <title>Zaika Biryani | Premium Ordering</title>
     
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#fc8019">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        /* --- ANIMATED GLASSMORPHISM THEME VARIABLES --- */
-        :root {
-            --primary-color: #fc8019; 
-            --bg-gradient-1: #1a1c2c;
-            --bg-gradient-2: #4a192c;
-            --bg-gradient-3: #0f2027;
-            --bg-gradient-4: #2c5364;
-            --glass-bg: rgba(30, 30, 40, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --input-bg: rgba(0, 0, 0, 0.4);
-            --input-border: rgba(255, 255, 255, 0.15);
-            --btn-bg: rgba(255, 255, 255, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --success-color: #4ade80;
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#fc8019',
+                        secondary: '#4a192c',
+                        success: '#1ba672',
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                        'scale-pop': 'scalePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scalePop: {
+                            '0%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer components {
+            .glass {
+                @apply backdrop-blur-xl border border-white/10 shadow-2xl;
+            }
+            .dark .glass {
+                @apply bg-black/40 border-white/5;
+            }
+            .light .glass {
+                @apply bg-white/70 border-gray-200;
+            }
+            .btn-active {
+                @apply active:scale-95 transition-transform duration-200;
+            }
+            .nav-item {
+                @apply flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors;
+            }
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         }
 
-        [data-theme="light"] {
-            --bg-gradient-1: #8EC5FC;
-            --bg-gradient-2: #E0C3FC;
-            --bg-gradient-3: #ffffff;
-            --bg-gradient-4: #D9AFD9;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --input-border: #cbd5e1;
-            --btn-bg: rgba(255, 255, 255, 0.5);
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --success-color: #1ba672;
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+        /* Background Animated Gradient */
+        .bg-animated {
+            background: linear-gradient(-45deg, #1a1c2c, #4a192c, #0f2027, #2c5364);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            color: var(--text-primary);
-            min-height: 100vh;
-            scroll-behavior: smooth; 
-            transition: color 0.3s ease;
         }
-
-        body.no-scroll { overflow: hidden; }
-
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border); box-shadow: 0 8px 32px var(--shadow-color);
-        }
-
-        /* Navigation */
-        header {
-            padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 90; border-bottom: 1px solid var(--glass-border);
-            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
-        .logo span { color: var(--primary-color); }
-        .brand-logo { height: 36px; width: auto; border-radius: 8px; object-fit: contain; }
-        
-        .header-actions { display: flex; align-items: center; gap: 1rem; }
-        .user-action, .cart-icon { cursor: pointer; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 6px; color: var(--text-primary); padding: 5px;}
-        .cart-icon { position: relative; }
-        .cart-icon .count-badge {
-            background: var(--primary-color); color: #fff; padding: 2px 6px; border-radius: 12px; font-size: 0.8rem;
-        }
-
-        .theme-toggle {
-            width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 22vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://placehold.co/1200x600/222/FFF?text=Zaika+Biryani') center/cover;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            color: #fff; text-align: center; padding: 2rem; margin: 1rem 5%; border-radius: 20px;
-        }
-        .hero h1 { font-size: 1.8rem; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
-
-        /* --- Menu Layout --- */
-        .menu-wrapper { padding: 0 5% 6rem; max-width: 900px; margin: 0 auto; min-height: 50vh;}
-        .main-title { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary); text-align: center; font-weight: 700; }
-        
-        .big-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
-        .big-cat-card { border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.2s; text-align: center; }
-        .big-cat-card:active { transform: scale(0.96); }
-        .big-cat-card img { width: 100%; height: 100px; object-fit: cover; border-bottom: 1px solid var(--glass-border);}
-        .big-cat-card h3 { padding: 0.8rem 0.5rem; font-size: 1rem; color: var(--text-primary); font-weight: 600;}
-
-        /* --- Items List View --- */
-        #items-view { display: none; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .back-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border); }
-        .back-btn { background: var(--btn-bg); border: 1px solid var(--glass-border); padding: 0.6rem 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 5px;}
-        .category-title { font-size: 1.5rem; color: var(--text-primary); font-weight: 700; }
-
-        .item-list-container { display: none; flex-direction: column; gap: 1rem; }
-        .item-list-container.active { display: flex; }
-        .card { display: flex; justify-content: space-between; padding: 1rem; border-radius: 16px; align-items: center; gap: 10px;}
-        .card-content { flex: 1; }
-        .card-title { font-size: 1.1rem; margin-bottom: 0.3rem; color: var(--text-primary); font-weight: 700; line-height: 1.3;}
-        .price { font-weight: 600; font-size: 1rem; color: var(--success-color); display: block; }
-        
-        .card-image-wrapper { position: relative; width: 110px; height: 100px; border-radius: 12px; flex-shrink: 0; }
-        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border);}
-        
-        .add-btn { 
-            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); 
-            background: var(--input-bg); color: var(--primary-color); border: 1px solid var(--glass-border); 
-            padding: 0.4rem 1rem; border-radius: 8px; font-weight: 800; font-size: 0.85rem; 
-            cursor: pointer; backdrop-filter: blur(10px); text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .add-btn:active { transform: translateX(-50%) scale(0.95); }
-
-        footer { border-top: 1px solid var(--glass-border); color: var(--text-primary); text-align: center; padding: 2rem 5%; margin-top: 2rem; }
-        footer h2 { margin-bottom: 0.5rem; color: var(--primary-color); font-weight: 800;}
-
-        /* --- Modals --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease; }
-        .modal-overlay.active { opacity: 1; }
-        
-        .bottom-sheet { width: 100%; max-width: 600px; margin: 0 auto; border-radius: 24px 24px 0 0; padding-bottom: 90px; position: relative; transform: translateY(100%); transition: transform 0.3s ease; max-height: 85vh; overflow-y: auto; border-bottom: none;}
-        .modal-overlay.active .bottom-sheet { transform: translateY(0); }
-        
-        .centered-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1002; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;}
-        .centered-modal-overlay.active { opacity: 1; }
-        .centered-modal { width: 90%; max-width: 400px; padding: 2rem; border-radius: 24px; transform: scale(0.95); transition: transform 0.3s ease; border: 1px solid var(--glass-border);}
-        .centered-modal-overlay.active .centered-modal { transform: scale(1); }
-        
-        .form-input { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); border-radius: 12px; font-size: 1rem; outline: none;}
-        select.form-input option { background: var(--bg-gradient-3); color: var(--text-primary); }
-        
-        .primary-btn { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
-        .secondary-btn { width: 100%; background: var(--btn-bg); color: var(--text-primary); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; font-weight: 600; margin-top: 0.5rem; cursor: pointer; }
-        .logout-btn { color: #ff6b6b; border-color: rgba(239, 68, 68, 0.3);}
-
-        /* Modal Specifics */
-        .modal-header { padding: 1rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 2; background: inherit;}
-        .modal-header img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover;}
-        .modal-header h3 { flex: 1; font-size: 1.1rem; color: var(--text-primary); font-weight: 700;}
-        .close-modal-btn { background: var(--btn-bg); border: 1px solid var(--glass-border); width: 36px; height: 36px; border-radius: 50%; font-weight: bold; cursor: pointer; color: var(--text-primary); display: flex; justify-content: center; align-items: center;}
-        
-        .modal-body { padding: 1rem; margin-top: 5px; }
-        .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; color: var(--text-primary); }
-        .option-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.5rem; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px;}
-        .opt-left { display: flex; align-items: center; gap: 12px; color: var(--text-primary); font-weight: 500;}
-        input[type="radio"], input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--primary-color); }
-        
-        .tag { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; margin-bottom: 4px; display: inline-block; }
-        .tag.red { color: #ff6b6b; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);}
-        
-        .modal-bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; padding: 1rem; border-top: 1px solid var(--glass-border); display: flex; gap: 1rem; align-items: center; z-index: 3; background: inherit; backdrop-filter: blur(20px);}
-        .qty-controls { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--input-border); background: var(--input-bg); border-radius: 12px; padding: 0.5rem; width: 110px; font-weight: bold; color: var(--text-primary); }
-        .qty-controls button { background: none; border: none; font-size: 1.4rem; color: var(--primary-color); cursor: pointer; padding: 0 10px; height: 100%;}
-        .add-to-cart-btn { flex: 1; background: var(--success-color); color: #fff; border: none; border-radius: 12px; padding: 1rem; font-size: 1.05rem; font-weight: 700; cursor: pointer; text-align: center; }
-
-        /* Cart Sidebar */
-        .cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; border-left: 1px solid var(--glass-border); transition: right 0.3s ease; z-index: 1001; display: flex; flex-direction: column; background: inherit; backdrop-filter: blur(20px); }
-        .cart-sidebar.open { right: 0; }
-        .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; color: var(--text-primary); font-weight: 800; font-size: 1.2rem;}
-        .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 1rem; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px;}
-        .cart-item-info h4 { font-size: 1rem; margin-bottom: 0.2rem; color: var(--text-primary); font-weight: 600;}
-        .cart-item-price { font-weight: 700; color: var(--success-color); text-align: right;}
-        
-        .cart-footer { padding: 1.5rem; border-top: 1px solid var(--glass-border); }
-        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary);}
-        .checkout-btn { width: 100%; background: var(--success-color); color: #fff; border: none; padding: 1rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer;}
-        
-        .order-history-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 1.2rem; margin-top: 1.5rem; text-align: left; max-height: 250px; overflow-y: auto;}
-        
-        /* Mobile specific adjustments */
-        @media (max-width: 480px) {
-            .header-text { display: none; }
-            .user-action i, .cart-icon i { font-size: 1.3rem; }
-            .logo { font-size: 1.3rem; }
-            .brand-logo { height: 30px; }
-            .hero h1 { font-size: 1.5rem; }
-            .big-category-grid { grid-template-columns: repeat(2, 1fr); }
-            .card-image-wrapper { width: 90px; height: 90px; }
-            .add-btn { font-size: 0.8rem; padding: 0.3rem 0.8rem; }
+        .light .bg-animated {
+            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #e2e8f0, #f8fafc);
         }
     </style>
 </head>
-<body>
+<body class="bg-animated animate-gradient-x min-h-screen text-slate-100 transition-colors duration-500 overflow-x-hidden">
 
     <script>
+        // Initial Theme Check
         const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.setAttribute('data-theme', savedTheme);
+        document.documentElement.classList.add(savedTheme);
     </script>
 
-    <header>
-        <div class="logo">
-            <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika Logo" class="brand-logo">
-            Zaika <span>Biryani</span>
+    <!-- Header (Professional Sticky) -->
+    <header class="sticky top-0 z-50 glass px-4 py-3 flex justify-between items-center transition-all duration-300">
+        <div class="flex items-center gap-3 animate-slide-up">
+            <div class="relative group">
+                <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika" class="h-10 w-10 rounded-xl object-contain shadow-lg group-hover:rotate-12 transition-transform">
+                <div class="absolute inset-0 rounded-xl bg-primary/20 animate-pulse -z-10"></div>
+            </div>
+            <h1 class="font-extrabold text-xl tracking-tight dark:text-white text-slate-900">
+                Zaika <span class="text-primary">Biryani</span>
+            </h1>
         </div>
-        <div class="header-actions">
-            <div class="cart-icon" onclick="toggleCart()">
-                <i class="fas fa-shopping-cart"></i> <span class="header-text">Cart</span> <span class="count-badge" id="cart-count">0</span>
-            </div>
-            <div class="theme-toggle" id="themeBtn">
-                <i class="fas fa-moon"></i>
-            </div>
-            <div class="user-action" onclick="handleUserClick()">
-                <i class="fas fa-user-circle"></i> <span class="header-text" id="header-user-name">Login</span>
-            </div>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+            <button id="themeBtn" class="w-10 h-10 rounded-full glass flex items-center justify-center text-lg btn-active dark:text-yellow-400 text-slate-700">
+                <i class="fas fa-moon transition-all duration-500 rotate-0 dark:hidden"></i>
+                <i class="fas fa-sun transition-all duration-500 dark:block hidden"></i>
+            </button>
+            
+            <button onclick="toggleCart()" class="relative glass h-10 px-3 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
+                <i class="fas fa-shopping-basket text-lg text-primary"></i>
+                <span class="hidden sm:inline font-semibold">Cart</span>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center animate-scale-pop">0</span>
+            </button>
+
+            <button onclick="handleUserClick()" class="glass h-10 w-10 sm:w-auto sm:px-4 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
+                <i class="fas fa-user-circle text-xl text-primary"></i>
+                <span id="header-user-name" class="hidden sm:inline font-bold">Login</span>
+            </button>
         </div>
     </header>
 
-    <section class="hero glass">
-        <h1>What's on your mind?</h1>
-    </section>
-
-    <div class="menu-wrapper">
-        <div id="category-view">
-            <h2 class="main-title">Explore Our Menu</h2>
-            <div class="big-category-grid">
-                <div class="big-cat-card glass" onclick="openCategory('list-biryani', 'Biryani')"><img src="https://i.ibb.co/pVbmkGL/biryani.jpg" alt="Biryani"><h3>Biryani</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-roll', 'Rolls')"><img src="https://i.ibb.co/d0c5XbJC/roll.webp" alt="Rolls"><h3>Roll</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-noodles', 'Noodles')"><img src="https://i.ibb.co/HDsD6YWz/noodles.webp" alt="Noodles"><h3>Noodles</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-chilly', 'Chilly 🌶')"><img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" alt="Chilly"><h3>Chilly 🌶</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-combo', 'Combos')"><img src="https://i.ibb.co/bRJ0xqxT/Manchurian.webp" alt="Combo"><h3>Combo</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-roti', 'Roti')"><img src="https://i.ibb.co/fzbCsxMW/Paratha.jpg" alt="Roti"><h3>Roti</h3></div>
-                <div class="big-cat-card glass" onclick="openCategory('list-drinks', 'Drinks')"><img src="https://i.ibb.co/84TJfH5G/drink.jpg" alt="Drinks"><h3>Drinks</h3></div>
+    <!-- Hero Section -->
+    <main class="max-w-4xl mx-auto px-4 pt-6 pb-24">
+        <section class="relative rounded-3xl overflow-hidden h-48 sm:h-64 shadow-2xl animate-slide-up mb-8">
+            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=1200&auto=format&fit=crop');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 animate-float">
+                <span class="bg-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 block w-max">Exclusive Deal</span>
+                <h2 class="text-white text-3xl font-extrabold drop-shadow-lg">What's on your mind?</h2>
+                <p class="text-gray-300 text-sm mt-1">Authentic flavors from Sonpur delivered fresh.</p>
             </div>
-        </div>
+        </section>
 
-        <div id="items-view">
-            <div class="back-header">
-                <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
-                <h2 class="category-title" id="dynamic-category-title">Category Name</h2>
-            </div>
-
-            <div class="item-list-container" id="list-biryani">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Biryani</h3><span class="price">₹180.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Biryani" alt="Chicken Biryani"><button class="add-btn" onclick="openModal('Chicken Biryani', 180.00, this, 'biryani')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Biryani</h3><span class="price">₹140.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Biryani" alt="Veg Biryani"><button class="add-btn" onclick="openModal('Veg Biryani', 140.00, this, 'biryani')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Biryani</h3><span class="price">₹160.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Biryani" alt="Paneer Biryani"><button class="add-btn" onclick="openModal('Paneer Biryani', 160.00, this, 'biryani')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-roll">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Egg Roll</h3><span class="price">₹50.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Egg+Roll" alt="Egg Roll"><button class="add-btn" onclick="openModal('Egg Roll', 50.00, this, 'roll')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Roll</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Roll" alt="Veg Roll"><button class="add-btn" onclick="openModal('Veg Roll', 40.00, this, 'roll')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Roll</h3><span class="price">₹70.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Roll" alt="Paneer Roll"><button class="add-btn" onclick="openModal('Paneer Roll', 70.00, this, 'roll')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Roll</h3><span class="price">₹80.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Roll" alt="Chicken Roll"><button class="add-btn" onclick="openModal('Chicken Roll', 80.00, this, 'roll')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-noodles">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Veg Noodles</h3><span class="price">₹90.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Veg+Noodles" alt="Veg Noodles"><button class="add-btn" onclick="openModal('Veg Noodles', 90.00, this, 'noodle')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Noodle</h3><span class="price">₹110.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Noodle" alt="Paneer Noodle"><button class="add-btn" onclick="openModal('Paneer Noodle', 110.00, this, 'noodle')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Noodle</h3><span class="price">₹130.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Noodle" alt="Chicken Noodle"><button class="add-btn" onclick="openModal('Chicken Noodle', 130.00, this, 'noodle')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-chilly">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Paneer Chilly</h3><span class="price">₹140.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paneer+Chilly" alt="Paneer Chilly"><button class="add-btn" onclick="openModal('Paneer Chilly', 140.00, this, 'chilly')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Chilly</h3><span class="price">₹160.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Chilly" alt="Chicken Chilly"><button class="add-btn" onclick="openModal('Chicken Chilly', 160.00, this, 'chilly')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-combo">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Chicken Lollipop Boneless</h3><span class="price">₹150.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Chicken+Lollipop" alt="Chicken Lollipop"><button class="add-btn" onclick="openModal('Chicken Lollipop Boneless', 150.00, this, 'combo')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Manchurian</h3><span class="price">₹120.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Manchurian" alt="Manchurian"><button class="add-btn" onclick="openModal('Manchurian', 120.00, this, 'combo')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-roti">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Laccha Paratha</h3><span class="price">₹30.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Laccha+Paratha" alt="Laccha Paratha"><button class="add-btn" onclick="openModal('Laccha Paratha', 30.00, this, 'roti')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Paratha</h3><span class="price">₹20.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Paratha" alt="Paratha"><button class="add-btn" onclick="openModal('Paratha', 20.00, this, 'roti')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Butter Paratha</h3><span class="price">₹25.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Butter+Paratha" alt="Butter Paratha"><button class="add-btn" onclick="openModal('Butter Paratha', 25.00, this, 'roti')">ADD</button></div></div>
-            </div>
-
-            <div class="item-list-container" id="list-drinks">
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Pepsi</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Pepsi" alt="Pepsi"><button class="add-btn" onclick="openModal('Pepsi', 40.00, this, 'drink')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Coke</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Coke" alt="Coke"><button class="add-btn" onclick="openModal('Coke', 40.00, this, 'drink')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Sprite</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Sprite" alt="Sprite"><button class="add-btn" onclick="openModal('Sprite', 40.00, this, 'drink')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Dew</h3><span class="price">₹40.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Dew" alt="Dew"><button class="add-btn" onclick="openModal('Dew', 40.00, this, 'drink')">ADD</button></div></div>
-                <div class="card glass"><div class="card-content"><h3 class="card-title">Lassi</h3><span class="price">₹50.00</span></div><div class="card-image-wrapper"><img src="https://placehold.co/600x400/eee/999?text=Lassi" alt="Lassi"><button class="add-btn" onclick="openModal('Lassi', 50.00, this, 'drink')">ADD</button></div></div>
-            </div>
-        </div> 
-    </div> 
-    
-    <footer>
-        <h2>Zaika Biryani</h2>
-        <p>Station Road Sonpur , Saran , Bihar</p>
-    </footer>
-
-    <div id="item-modal" class="modal-overlay">
-        <div class="bottom-sheet glass">
-            <div class="modal-header">
-                <img id="modal-img" src="" alt="Item">
-                <h3 id="modal-name">Item Name</h3>
-                <button class="close-modal-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <!-- Category Grid -->
+        <div id="category-view" class="space-y-6 animate-slide-up">
+            <div class="flex justify-between items-end">
+                <h3 class="text-2xl font-bold dark:text-white text-slate-800">Explore Menu</h3>
+                <span class="text-primary text-sm font-semibold cursor-pointer">View All</span>
             </div>
             
-            <div class="modal-body" id="portion-section">
-                <div class="section-title">Quantity <span>Select any 1</span></div>
-                <label class="option-row">
-                    <div class="opt-left"><input type="radio" name="portion" id="radio-mini" value="Mini" onchange="calculateModalTotal()"><div>Mini <span style="font-size: 0.8rem; color: var(--text-secondary);">(Half)</span></div></div>
-                    <div class="opt-price">₹<span id="price-mini">0</span></div>
-                </label>
-                <label class="option-row">
-                    <div class="opt-left"><input type="radio" name="portion" id="radio-regular" value="Regular" checked onchange="calculateModalTotal()"><div>Regular <span style="font-size: 0.8rem; color: var(--text-secondary);">(Full)</span></div></div>
-                    <div class="opt-price">₹<span id="price-regular">0</span></div>
-                </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <!-- Staggered Entry using inline delay would normally go here, handled via logic -->
+                <div onclick="openCategory('list-biryani', 'Biryani')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/pVbmkGL/biryani.jpg" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Biryani</p>
+                        <p class="text-primary text-xs font-medium">12+ Options</p>
+                    </div>
+                </div>
+
+                <div onclick="openCategory('list-roll', 'Rolls')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/d0c5XbJC/roll.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Rolls</p>
+                        <p class="text-primary text-xs font-medium">8+ Options</p>
+                    </div>
+                </div>
+
+                <div onclick="openCategory('list-noodles', 'Noodles')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/HDsD6YWz/noodles.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Noodles</p>
+                        <p class="text-primary text-xs font-medium">Best Seller</p>
+                    </div>
+                </div>
+
+                <div onclick="openCategory('list-chilly', 'Chilly 🌶')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Chilly 🌶</p>
+                        <p class="text-primary text-xs font-medium">Spicy Hits</p>
+                    </div>
+                </div>
+                <!-- ... other categories added via same pattern -->
+            </div>
+        </div>
+
+        <!-- Items View (Hidden by default) -->
+        <div id="items-view" class="hidden animate-slide-up">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="goBack()" class="h-12 w-12 rounded-2xl glass flex items-center justify-center btn-active text-slate-800 dark:text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 id="dynamic-category-title" class="text-3xl font-extrabold dark:text-white text-slate-900">Category</h2>
             </div>
 
-            <div class="modal-body" id="addon-section">
-                <div class="section-title">Add Ons</div>
-                <label class="option-row">
-                    <div class="opt-left"><input type="checkbox" class="addon-cb" value="Egg" data-price="20" onchange="calculateModalTotal()"><div><span class="tag red">Protein Rich</span><br>Egg [1 Pc]</div></div>
-                    <div class="opt-price">+ ₹20</div>
-                </label>
+            <div id="items-container" class="grid gap-4">
+                <!-- Content generated via script -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 py-12 px-6 glass text-center rounded-t-[40px]">
+        <h2 class="text-2xl font-black text-primary mb-2">Zaika Biryani</h2>
+        <p class="text-slate-500 text-sm font-medium">Station Road Sonpur, Saran, Bihar</p>
+        <div class="flex justify-center gap-6 mt-6">
+            <div class="h-10 w-10 rounded-full glass flex items-center justify-center text-primary"><i class="fab fa-instagram"></i></div>
+            <div class="h-10 w-10 rounded-full glass flex items-center justify-center text-primary"><i class="fab fa-facebook-f"></i></div>
+            <div class="h-10 w-10 rounded-full glass flex items-center justify-center text-primary"><i class="fas fa-phone"></i></div>
+        </div>
+        <p class="mt-8 text-[10px] opacity-30 tracking-widest uppercase">Premium Dining Experience © 2026</p>
+    </footer>
+
+    <!-- Bottom Mobile Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 glass h-20 px-6 flex justify-around items-center z-[60] sm:hidden border-t border-white/10 rounded-t-3xl">
+        <button onclick="goBack()" class="nav-item text-primary"><i class="fas fa-utensils text-xl"></i><span>Menu</span></button>
+        <button onclick="toggleCart()" class="nav-item text-slate-400"><i class="fas fa-shopping-bag text-xl"></i><span>Orders</span></button>
+        <button onclick="handleUserClick()" class="nav-item text-slate-400"><i class="fas fa-user text-xl"></i><span>Account</span></button>
+    </nav>
+
+    <!-- MODALS & SIDEBARS -->
+
+    <!-- Item Detail Bottom Sheet -->
+    <div id="item-modal" class="fixed inset-0 z-[100] hidden overflow-hidden transition-all duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="modal-backdrop" onclick="closeModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 glass rounded-t-[40px] max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300 ease-out" id="modal-sheet">
+            <div class="sticky top-0 glass z-10 px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <img id="modal-img" class="h-14 w-14 rounded-2xl object-cover shadow-lg border border-white/20">
+                    <h3 id="modal-name" class="text-xl font-extrabold dark:text-white text-slate-900">Item Name</h3>
+                </div>
+                <button onclick="closeModal()" class="h-10 w-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center btn-active dark:text-white text-slate-800">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
-            <div class="modal-bottom-bar">
-                <div class="qty-controls"><button onclick="changeModalQty(-1)">-</button><span id="modal-qty">1</span><button onclick="changeModalQty(1)">+</button></div>
-                <button class="add-to-cart-btn" onclick="confirmAddToCart()">Add Item | ₹<span id="modal-btn-total">0</span></button>
+            <div class="p-6 space-y-8">
+                <!-- Portions -->
+                <div id="portion-section">
+                    <h4 class="text-sm font-black uppercase tracking-widest text-primary mb-4">Select Quantity</h4>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary group">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="portion" id="radio-mini" value="Mini" class="w-5 h-5 accent-primary" onchange="calculateModalTotal()">
+                                <div class="dark:text-white text-slate-800">
+                                    <p class="font-bold">Mini (Half)</p>
+                                    <p class="text-xs opacity-50">Standard serving</p>
+                                </div>
+                            </div>
+                            <span class="font-black text-primary">₹<span id="price-mini">0</span></span>
+                        </label>
+                        <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary group">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="portion" id="radio-regular" value="Regular" checked class="w-5 h-5 accent-primary" onchange="calculateModalTotal()">
+                                <div class="dark:text-white text-slate-800">
+                                    <p class="font-bold">Regular (Full)</p>
+                                    <p class="text-xs opacity-50">Hearty meal</p>
+                                </div>
+                            </div>
+                            <span class="font-black text-primary">₹<span id="price-regular">0</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Addons -->
+                <div id="addon-section">
+                    <h4 class="text-sm font-black uppercase tracking-widest text-primary mb-4">Add Extra Toppings</h4>
+                    <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" class="addon-cb w-5 h-5 accent-primary" value="Egg" data-price="20" onchange="calculateModalTotal()">
+                            <div class="dark:text-white text-slate-800">
+                                <span class="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">Protein Rich</span>
+                                <p class="font-bold">Egg [1 Pc]</p>
+                            </div>
+                        </div>
+                        <span class="font-bold text-success">+ ₹20</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="sticky bottom-0 glass p-6 border-t border-white/10 flex gap-4 items-center">
+                <div class="flex items-center glass p-2 rounded-2xl gap-4 border-white/20">
+                    <button onclick="changeModalQty(-1)" class="h-10 w-10 flex items-center justify-center text-primary font-black text-xl btn-active">-</button>
+                    <span id="modal-qty" class="font-bold text-lg dark:text-white text-slate-900 w-4 text-center">1</span>
+                    <button onclick="changeModalQty(1)" class="h-10 w-10 flex items-center justify-center text-primary font-black text-xl btn-active">+</button>
+                </div>
+                <button onclick="confirmAddToCart()" class="flex-1 h-14 bg-primary text-white font-black text-lg rounded-2xl shadow-xl shadow-primary/20 btn-active hover:brightness-110">
+                    Add | ₹<span id="modal-btn-total">0</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="cart-backdrop" id="cart-backdrop" onclick="toggleCart()"></div>
-    <div class="cart-sidebar glass" id="cart-sidebar">
-        <div class="cart-header"><h2>Cart</h2><button style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: var(--text-primary);" onclick="toggleCart()">&times;</button></div>
-        <div class="cart-items" id="cart-items-container"></div>
-        
-        <div class="cart-footer">
-            <div style="margin-bottom: 1.2rem;">
-                <label style="display: block; font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;"><i class="far fa-clock"></i> Expected Arrival Time:</label>
-                <select id="eta-select" class="form-input" style="margin-bottom: 0; padding: 0.8rem; cursor: pointer;">
-                    <option value="" disabled selected>Select Time (2 PM - 9 PM)</option>
-                    <option value="02:00 PM">02:00 PM</option>
-                    <option value="02:30 PM">02:30 PM</option>
-                    <option value="03:00 PM">03:00 PM</option>
-                    <option value="03:30 PM">03:30 PM</option>
-                    <option value="04:00 PM">04:00 PM</option>
-                    <option value="04:30 PM">04:30 PM</option>
-                    <option value="05:00 PM">05:00 PM</option>
-                    <option value="05:30 PM">05:30 PM</option>
-                    <option value="06:00 PM">06:00 PM</option>
-                    <option value="06:30 PM">06:30 PM</option>
-                    <option value="07:00 PM">07:00 PM</option>
-                    <option value="07:30 PM">07:30 PM</option>
-                    <option value="08:00 PM">08:00 PM</option>
-                    <option value="08:30 PM">08:30 PM</option>
-                    <option value="09:00 PM">09:00 PM</option>
-                </select>
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md z-[110] transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 w-full max-w-[400px] glass h-full flex flex-col border-l border-white/10">
+            <div class="p-6 border-bottom border-white/10 flex justify-between items-center">
+                <h2 class="text-2xl font-black dark:text-white text-slate-900">Your Basket</h2>
+                <button onclick="toggleCart()" class="h-10 w-10 rounded-full glass flex items-center justify-center btn-active text-slate-600 dark:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
 
-            <div class="cart-total-row"><span>Subtotal</span><span>₹<span id="cart-total-price">0.00</span></span></div>
-            <button class="checkout-btn" onclick="processCheckout()">PLACE ORDER VIA WHATSAPP</button>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
+                <!-- Cart items go here -->
+            </div>
+
+            <div class="p-6 glass border-t border-white/10 space-y-4 rounded-t-[30px]">
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-primary"><i class="far fa-clock mr-1"></i> Arrival Time</label>
+                    <select id="eta-select" class="w-full h-12 glass rounded-xl px-4 font-bold text-slate-900 dark:text-white outline-none focus:ring-2 ring-primary">
+                        <option value="" disabled selected>When will you arrive?</option>
+                        <!-- Options generated -->
+                    </select>
+                </div>
+                <div class="flex justify-between items-center text-xl font-black dark:text-white text-slate-900">
+                    <span>Total Pay</span>
+                    <span class="text-success">₹<span id="cart-total-price">0.00</span></span>
+                </div>
+                <button onclick="processCheckout()" class="w-full h-16 bg-success text-white font-black text-lg rounded-2xl btn-active shadow-xl shadow-success/20 flex items-center justify-center gap-3">
+                    <i class="fab fa-whatsapp text-2xl"></i> PLACE ORDER
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="auth-modal" class="centered-modal-overlay">
-        <div class="centered-modal glass">
-            <h2>Welcome to Zaika!</h2>
-            <form onsubmit="handleLogin(event)">
-                <input type="text" id="auth-name" class="form-input" placeholder="Full Name" required>
-                <input type="tel" id="auth-mobile" class="form-input" placeholder="Mobile Number" required>
-                <input type="email" id="auth-email" class="form-input" placeholder="Email ID" required>
-                <button type="submit" class="primary-btn">Sign In</button>
-                <button type="button" class="secondary-btn" onclick="closeAuthModal()">Cancel</button>
+    <!-- Auth / Profile Modals (Generic Professional Style) -->
+    <div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeAuthModal()"></div>
+        <div class="glass w-full max-w-sm rounded-[40px] p-8 relative transform scale-90 transition-transform duration-300" id="auth-sheet">
+            <h2 class="text-2xl font-black mb-1 dark:text-white text-slate-900">Welcome!</h2>
+            <p class="text-slate-400 text-sm mb-8">Sign in to save your order history.</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="text" id="auth-name" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Full Name" required>
+                <input type="tel" id="auth-mobile" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Mobile Number" required>
+                <input type="email" id="auth-email" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Email Address" required>
+                <button type="submit" class="w-full h-14 bg-primary text-white font-black rounded-2xl btn-active shadow-lg">Sign In Now</button>
+                <button type="button" onclick="closeAuthModal()" class="w-full py-2 text-slate-500 font-bold text-sm">Maybe Later</button>
             </form>
         </div>
     </div>
 
-    <div id="profile-modal" class="centered-modal-overlay">
-        <div class="centered-modal glass" style="text-align: center;">
-            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"><i class="fas fa-user-circle"></i></div>
-            <h2 style="margin-bottom: 0.5rem;" id="prof-name-display">Name</h2>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;" id="prof-email-display"></p>
-            <p style="color: var(--text-secondary); font-size: 0.95rem;" id="prof-mobile-display"></p>
-            
-            <div class="order-history-card">
-                <h4><i class="fas fa-history"></i> Recent Orders (Last 3 Months)</h4>
-                <div id="last-order-content"></div>
-            </div>
-
-            <button class="secondary-btn logout-btn" style="margin-top: 1.5rem;" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            <button class="secondary-btn" onclick="closeProfileModal()">Close</button>
-        </div>
-    </div>
-
-    <div id="install-banner" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--primary-color); color: #fff; padding: 1rem; z-index: 9999; justify-content: space-between; align-items: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.3);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" style="width: 40px; height: 40px; border-radius: 8px;">
-            <div>
-                <strong style="display: block; font-size: 1rem; color: #fff;">Install Zaika App</strong>
-                <span id="install-text" style="font-size: 0.8rem; opacity: 0.9; color: #fff;">Order faster next time!</span>
-            </div>
-        </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button id="install-btn" style="background: #fff; color: var(--primary-color); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; cursor: pointer;">INSTALL</button>
-            <button onclick="document.getElementById('install-banner').style.display='none'" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
-        </div>
-    </div>
-
+    <!-- Script Section (Retained Business Logic with UI Integration) -->
     <script>
-        // --- PWA SERVICE WORKER REGISTRATION ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
-                    console.log('PWA ServiceWorker registered', reg);
-                }).catch(err => {
-                    console.log('PWA ServiceWorker registration failed: ', err);
-                });
-            });
-        }
+        // Data Structure
+        const menuData = {
+            'list-biryani': [
+                { name: 'Chicken Biryani', price: 180, img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=400', category: 'biryani' },
+                { name: 'Veg Biryani', price: 140, img: 'https://images.unsplash.com/photo-1543352658-927ee178100e?q=80&w=400', category: 'biryani' },
+                { name: 'Paneer Biryani', price: 160, img: 'https://images.unsplash.com/photo-1543352658-927ee178100e?q=80&w=400', category: 'biryani' }
+            ],
+            'list-roll': [
+                { name: 'Egg Roll', price: 50, img: 'https://i.ibb.co/d0c5XbJC/roll.webp', category: 'roll' },
+                { name: 'Veg Roll', price: 40, img: 'https://i.ibb.co/d0c5XbJC/roll.webp', category: 'roll' },
+                { name: 'Paneer Roll', price: 70, img: 'https://i.ibb.co/d0c5XbJC/roll.webp', category: 'roll' },
+                { name: 'Chicken Roll', price: 80, img: 'https://i.ibb.co/d0c5XbJC/roll.webp', category: 'roll' }
+            ],
+            'list-noodles': [
+                { name: 'Veg Noodles', price: 90, img: 'https://i.ibb.co/HDsD6YWz/noodles.webp', category: 'noodle' },
+                { name: 'Paneer Noodle', price: 110, img: 'https://i.ibb.co/HDsD6YWz/noodles.webp', category: 'noodle' },
+                { name: 'Chicken Noodle', price: 130, img: 'https://i.ibb.co/HDsD6YWz/noodles.webp', category: 'noodle' }
+            ],
+            'list-chilly': [
+                { name: 'Paneer Chilly', price: 140, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' },
+                { name: 'Chicken Chilly', price: 160, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' }
+            ]
+        };
 
-        // --- THEME TOGGLE ---
-        const themeBtn = document.getElementById('themeBtn');
-        const themeIcon = themeBtn.querySelector('i');
-        
-        function updateThemeIcon(theme) {
-            if (theme === 'light') { themeIcon.classList.replace('fa-moon', 'fa-sun'); } 
-            else { themeIcon.classList.replace('fa-sun', 'fa-moon'); }
-        }
-        updateThemeIcon(document.body.getAttribute('data-theme'));
-
-        themeBtn.addEventListener('click', () => {
-            const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-
-        // --- ORDER HISTORY CLEANUP ---
-        function cleanOldOrders(historyArray) {
-            if (!Array.isArray(historyArray)) return [];
-            const ninetyDaysInMillis = 90 * 24 * 60 * 60 * 1000; 
-            const now = Date.now();
-            return historyArray.filter(order => (now - order.timestamp) <= ninetyDaysInMillis);
-        }
-
-        // --- AUTH & PROFILE ---
-        let currentUser = JSON.parse(localStorage.getItem('zaikaUser')) || null;
-        let orderHistory = JSON.parse(localStorage.getItem('zaikaOrderHistory')) || [];
-
-        window.onload = () => updateHeaderUser();
-
-        function updateHeaderUser() {
-            document.getElementById('header-user-name').innerText = currentUser ? currentUser.name.split(' ')[0] : 'Login';
-        }
-
-        function handleUserClick() { currentUser ? showProfileModal() : showAuthModal(); }
-
-        function showAuthModal() { 
-            document.body.classList.add('no-scroll');
-            document.getElementById('auth-modal').style.display = 'flex'; 
-            setTimeout(() => document.getElementById('auth-modal').classList.add('active'), 10);
-        }
-        function closeAuthModal() { 
-            document.body.classList.remove('no-scroll');
-            document.getElementById('auth-modal').classList.remove('active');
-            setTimeout(() => document.getElementById('auth-modal').style.display = 'none', 300);
-        }
-        
-        function showProfileModal() { 
-            document.body.classList.add('no-scroll');
-            document.getElementById('prof-name-display').innerText = currentUser.name;
-            document.getElementById('prof-email-display').innerText = currentUser.email;
-            document.getElementById('prof-mobile-display').innerText = "+91 " + currentUser.mobile;
-
-            orderHistory = cleanOldOrders(orderHistory);
-            let orderContainer = document.getElementById('last-order-content');
-            
-            if (orderHistory.length > 0) {
-                let historyHtml = '';
-                [...orderHistory].reverse().forEach(order => {
-                    let itemsHtml = order.items.map(item => `${item.qty}x ${item.name}`).join('<br>');
-                    historyHtml += `
-                        <div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px;">
-                            <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.5;">${itemsHtml}</div>
-                            <div style="font-size: 0.85rem; color: var(--primary-color); margin-bottom: 0.5rem;">Arrival: ${order.eta || 'N/A'}</div>
-                            <div style="font-weight: 700; color: var(--success-color); font-size: 1rem;">Total: ₹${order.total.toFixed(2)}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 5px;">${order.date}</div>
-                        </div>`;
-                });
-                orderContainer.innerHTML = historyHtml;
-            } else {
-                orderContainer.innerHTML = "<p style='font-size: 0.85rem; color: var(--text-secondary);'>No orders in the last 3 months.</p>";
-            }
-
-            document.getElementById('profile-modal').style.display = 'flex'; 
-            setTimeout(() => document.getElementById('profile-modal').classList.add('active'), 10);
-        }
-        function closeProfileModal() { 
-            document.body.classList.remove('no-scroll');
-            document.getElementById('profile-modal').classList.remove('active');
-            setTimeout(() => document.getElementById('profile-modal').style.display = 'none', 300);
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            currentUser = { 
-                name: document.getElementById('auth-name').value, 
-                mobile: document.getElementById('auth-mobile').value, 
-                email: document.getElementById('auth-email').value 
-            };
-            localStorage.setItem('zaikaUser', JSON.stringify(currentUser));
-            updateHeaderUser(); closeAuthModal(); alert(`Welcome back, ${currentUser.name}!`);
-        }
-
-        function handleLogout() {
-            currentUser = null; localStorage.removeItem('zaikaUser');
-            updateHeaderUser(); closeProfileModal(); alert("Logged out successfully.");
-        }
-
-        // --- UI NAVIGATION ---
-        function openCategory(listId, categoryName) {
-            document.getElementById('category-view').style.display = 'none';
-            document.getElementById('items-view').style.display = 'block';
-            document.getElementById('dynamic-category-title').innerText = categoryName;
-            document.querySelectorAll('.item-list-container').forEach(list => list.classList.remove('active'));
-            document.getElementById(listId).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        function goBack() {
-            document.getElementById('items-view').style.display = 'none';
-            document.getElementById('category-view').style.display = 'block';
-        }
-
-        // --- CART & MODAL LOGIC ---
+        // UI State
         let cart = [];
+        let currentUser = JSON.parse(localStorage.getItem('zaikaUser')) || null;
         let currentItem = null;
+        let currentCategory = '';
         let baseFullPrice = 0;
         let currentModalQty = 1;
-        let currentCategory = ''; 
-        let currentUnitPrice = 0;
 
-        function openModal(name, price, btnElement, category) {
-            document.body.classList.add('no-scroll');
-            currentItem = name; baseFullPrice = price; currentModalQty = 1; currentCategory = category;
+        // Theme Management
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Navigation Logic
+        function openCategory(listId, name) {
+            document.getElementById('category-view').classList.add('hidden');
+            const itemsView = document.getElementById('items-view');
+            itemsView.classList.remove('hidden');
+            document.getElementById('dynamic-category-title').innerText = name;
             
-            document.getElementById('modal-img').src = btnElement.closest('.card').querySelector('img').src;
+            const container = document.getElementById('items-container');
+            container.innerHTML = '';
+            
+            const items = menuData[listId] || [];
+            items.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = `glass rounded-3xl p-4 flex items-center justify-between gap-4 animate-slide-up hover:border-primary/50 transition-all`;
+                card.style.animationDelay = `${idx * 0.1}s`;
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <h4 class="font-bold dark:text-white text-slate-800 text-lg leading-tight">${item.name}</h4>
+                        <p class="text-success font-black mt-1">₹${item.price.toFixed(2)}</p>
+                    </div>
+                    <div class="relative h-24 w-24 flex-shrink-0">
+                        <img src="${item.img}" class="h-full w-full object-cover rounded-2xl shadow-md border border-white/10">
+                        <button onclick="openModal('${item.name}', ${item.price}, '${item.img}', '${item.category}')" 
+                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 text-primary border border-primary/20 px-4 py-1 rounded-xl font-black text-xs shadow-lg btn-active uppercase">
+                            Add
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function goBack() {
+            document.getElementById('items-view').classList.add('hidden');
+            document.getElementById('category-view').classList.remove('hidden');
+        }
+
+        // Modal Logic
+        function openModal(name, price, img, category) {
+            currentItem = name;
+            baseFullPrice = price;
+            currentCategory = category;
+            currentModalQty = 1;
+            
+            document.getElementById('modal-img').src = img;
             document.getElementById('modal-name').innerText = name;
+            document.getElementById('price-regular').innerText = price.toFixed(2);
+            document.getElementById('price-mini').innerText = (price / 2).toFixed(2);
+            document.getElementById('modal-qty').innerText = 1;
             
-            if (category === 'biryani') {
-                document.getElementById('portion-section').style.display = 'block';
-                document.getElementById('addon-section').style.display = 'block';
-                document.getElementById('price-regular').innerText = price.toFixed(2);
-                document.getElementById('price-mini').innerText = (price / 2).toFixed(2);
-            } else {
-                document.getElementById('portion-section').style.display = 'none';
-                document.getElementById('addon-section').style.display = 'none';
-            }
+            // Show/Hide biryani specifics
+            document.getElementById('portion-section').style.display = category === 'biryani' ? 'block' : 'none';
+            document.getElementById('addon-section').style.display = category === 'biryani' ? 'block' : 'none';
             
-            document.getElementById('radio-regular').checked = true;
-            document.getElementById('modal-qty').innerText = currentModalQty;
-            document.querySelectorAll('.addon-cb').forEach(cb => cb.checked = false);
-
             calculateModalTotal();
+
             const modal = document.getElementById('item-modal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modal-backdrop').classList.add('opacity-100');
+                document.getElementById('modal-sheet').classList.remove('translate-y-full');
+            }, 10);
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeModal() { 
-            document.body.classList.remove('no-scroll');
-            const modal = document.getElementById('item-modal');
-            modal.classList.remove('active');
-            setTimeout(() => modal.style.display = 'none', 300);
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.remove('opacity-100');
+            document.getElementById('modal-sheet').classList.add('translate-y-full');
+            setTimeout(() => {
+                document.getElementById('item-modal').classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
         }
 
-        function changeModalQty(change) {
-            if (currentModalQty + change >= 1) {
-                currentModalQty += change;
-                document.getElementById('modal-qty').innerText = currentModalQty;
-                calculateModalTotal();
-            }
+        function changeModalQty(dir) {
+            currentModalQty = Math.max(1, currentModalQty + dir);
+            document.getElementById('modal-qty').innerText = currentModalQty;
+            calculateModalTotal();
         }
 
         function calculateModalTotal() {
             let itemPrice = document.getElementById('radio-regular').checked ? baseFullPrice : baseFullPrice / 2;
-            let addonsTotal = 0;
-            if (currentCategory === 'biryani') {
-                document.querySelectorAll('.addon-cb:checked').forEach(cb => { addonsTotal += parseFloat(cb.getAttribute('data-price')); });
+            let addons = 0;
+            if(currentCategory === 'biryani') {
+                document.querySelectorAll('.addon-cb:checked').forEach(cb => addons += parseFloat(cb.dataset.price));
             }
-            
-            currentUnitPrice = itemPrice + addonsTotal;
-            document.getElementById('modal-btn-total').innerText = (currentUnitPrice * currentModalQty).toFixed(2);
+            const total = (itemPrice + addons) * currentModalQty;
+            document.getElementById('modal-btn-total').innerText = total.toFixed(2);
         }
 
         function confirmAddToCart() {
             let finalName = currentItem;
+            let itemPrice = document.getElementById('radio-regular').checked ? baseFullPrice : baseFullPrice / 2;
+            let addonsTotal = 0;
+            
             if (currentCategory === 'biryani') {
-                let size = document.getElementById('radio-regular').checked ? "Regular" : "Mini";
+                const size = document.getElementById('radio-regular').checked ? "Full" : "Half";
                 finalName += ` (${size})`;
-                let selectedAddons = [];
-                document.querySelectorAll('.addon-cb:checked').forEach(cb => { selectedAddons.push(cb.value); });
-                if (selectedAddons.length > 0) finalName += ` + ${selectedAddons.join(', ')}`;
+                document.querySelectorAll('.addon-cb:checked').forEach(cb => {
+                    addonsTotal += parseFloat(cb.dataset.price);
+                    finalName += ` + ${cb.value}`;
+                });
             }
-            
-            let existingItem = cart.find(i => i.name === finalName);
-            if (existingItem) {
-                existingItem.qty += currentModalQty;
+
+            const unitPrice = itemPrice + addonsTotal;
+            const existing = cart.find(i => i.name === finalName);
+            if (existing) {
+                existing.qty += currentModalQty;
             } else {
-                cart.push({ name: finalName, unitPrice: currentUnitPrice, qty: currentModalQty });
+                cart.push({ name: finalName, unitPrice, qty: currentModalQty });
             }
-            
-            closeModal(); updateCartUI();
-            
-            document.body.classList.add('no-scroll');
-            document.getElementById('cart-sidebar').classList.add('open');
-            document.getElementById('cart-backdrop').style.display = 'block';
+
+            closeModal();
+            updateCartUI();
+            toggleCart();
         }
 
+        // Cart & Checkout
         function toggleCart() {
             const sidebar = document.getElementById('cart-sidebar');
-            const backdrop = document.getElementById('cart-backdrop');
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open'); backdrop.style.display = 'none';
-                document.body.classList.remove('no-scroll');
+            const isOpen = sidebar.classList.contains('translate-x-0');
+            if (isOpen) {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('translate-x-full');
+                document.body.style.overflow = '';
             } else {
-                sidebar.classList.add('open'); backdrop.style.display = 'block';
-                document.body.classList.add('no-scroll'); updateCartUI();
+                sidebar.classList.remove('translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                document.body.style.overflow = 'hidden';
+                updateCartUI();
             }
         }
 
         function updateCartUI() {
             const container = document.getElementById('cart-items-container');
             let total = 0;
+            container.innerHTML = '';
             
             if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">Your cart is empty</p>';
-                document.getElementById('cart-total-price').innerText = "0.00";
-                document.getElementById('cart-count').innerText = 0;
-                return;
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center p-8">
+                        <div class="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center text-primary text-4xl mb-4 animate-float">
+                            <i class="fas fa-shopping-basket"></i>
+                        </div>
+                        <h3 class="font-bold text-lg dark:text-white text-slate-800">Your basket is empty</h3>
+                        <p class="text-slate-400 text-sm mt-1">Add something tasty to get started!</p>
+                    </div>`;
+            } else {
+                cart.forEach((item, idx) => {
+                    total += item.unitPrice * item.qty;
+                    const el = document.createElement('div');
+                    el.className = 'glass p-4 rounded-2xl flex justify-between items-center animate-slide-up';
+                    el.style.animationDelay = `${idx * 0.1}s`;
+                    el.innerHTML = `
+                        <div>
+                            <p class="font-bold dark:text-white text-slate-800 text-sm">${item.name}</p>
+                            <p class="text-xs text-slate-400">₹${item.unitPrice} x ${item.qty}</p>
+                        </div>
+                        <p class="font-black text-success">₹${(item.unitPrice * item.qty).toFixed(2)}</p>
+                    `;
+                    container.appendChild(el);
+                });
             }
             
-            let html = '';
-            cart.forEach(item => {
-                let lineTotal = item.unitPrice * item.qty;
-                total += lineTotal;
-                html += `
-                <div class="cart-item">
-                    <div style="flex: 1;">
-                        <h4 style="font-size: 0.95rem; margin-bottom: 0.3rem; color: var(--text-primary); font-weight: 600;">${item.name}</h4>
-                        <div style="font-size: 0.85rem; color: var(--text-secondary);">₹${item.unitPrice.toFixed(2)} x ${item.qty}</div>
-                    </div>
-                    <div style="font-weight: 700; color: var(--success-color);">₹${lineTotal.toFixed(2)}</div>
-                </div>`;
-            });
-            container.innerHTML = html;
             document.getElementById('cart-total-price').innerText = total.toFixed(2);
-            document.getElementById('cart-count').innerText = cart.length; 
+            document.getElementById('cart-count').innerText = cart.length;
         }
 
-        // --- NEW WHATSAPP CHECKOUT LOGIC WITH ETA ---
         function processCheckout() {
-            if (cart.length === 0) return alert("Your cart is empty!");
-            if (!currentUser) {
-                toggleCart(); showAuthModal(); return;
-            }
+            if (cart.length === 0) return;
+            if (!currentUser) { toggleCart(); showAuthModal(); return; }
 
-            // Verify ETA is selected
-            const etaSelect = document.getElementById('eta-select');
-            const selectedEta = etaSelect.value;
-            
-            if (!selectedEta) {
-                alert("Please select your Expected Arrival Time!");
-                etaSelect.focus();
-                return;
-            }
+            const eta = document.getElementById('eta-select').value;
+            if (!eta) return alert("Please select arrival time!");
 
-            let finalTotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+            let msg = `*New Order: Zaika Biryani*\n------------------\n`;
+            msg += `*Name:* ${currentUser.name}\n*Arrival:* ${eta}\n\n`;
+            cart.forEach(i => msg += `• ${i.qty}x ${i.name} - ₹${(i.unitPrice * i.qty).toFixed(2)}\n`);
+            msg += `\n*Total: ₹${document.getElementById('cart-total-price').innerText}*\n------------------`;
             
-            // 1. Save to Order History
-            let orderDetails = {
-                id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleString(),
-                items: [...cart], total: finalTotal, eta: selectedEta
-            };
-            orderHistory.push(orderDetails);
-            localStorage.setItem('zaikaOrderHistory', JSON.stringify(cleanOldOrders(orderHistory)));
-
-            // 2. Format WhatsApp Message
-            const shopPhone = "917369062084"; 
-            let message = `*New Order from Zaika Biryani!* 🍛\n\n`;
-            message += `*Customer Details:*\n`;
-            message += `Name: ${currentUser.name}\n`;
-            message += `Mobile: ${currentUser.mobile}\n\n`;
-            
-            message += `*🕒 Expected Arrival: ${selectedEta}*\n\n`;
-            
-            message += `*Order Details:*\n`;
-            cart.forEach(item => {
-                message += `${item.qty}x ${item.name} - ₹${(item.unitPrice * item.qty).toFixed(2)}\n`;
-            });
-            
-            message += `\n*Total Amount: ₹${finalTotal.toFixed(2)}*\n\n`;
-            message += `Please confirm my order!`;
-
-            // 3. Open WhatsApp
-            const whatsappUrl = `https://wa.me/${shopPhone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-
-            // 4. Reset Cart & Dropdown
-            cart = []; 
-            etaSelect.value = ""; 
-            updateCartUI(); 
-            toggleCart(); 
+            const url = `https://wa.me/917369062084?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+            cart = [];
+            updateCartUI();
+            toggleCart();
         }
 
-        // --- SMART INSTALL BANNER LOGIC ---
-        let deferredPrompt;
-        const installBanner = document.getElementById('install-banner');
-        const installBtn = document.getElementById('install-btn');
-        const installText = document.getElementById('install-text');
+        // Auth Logic
+        function handleUserClick() { currentUser ? showProfileModal() : showAuthModal(); }
+        function showAuthModal() { 
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+            setTimeout(() => document.getElementById('auth-sheet').classList.remove('scale-90'), 10);
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-sheet').classList.add('scale-90');
+            setTimeout(() => {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('auth-modal').classList.remove('flex');
+            }, 300);
+        }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
+        function handleLogin(e) {
             e.preventDefault();
-            deferredPrompt = e;
-            installBanner.style.display = 'flex';
+            currentUser = {
+                name: document.getElementById('auth-name').value,
+                mobile: document.getElementById('auth-mobile').value,
+                email: document.getElementById('auth-email').value
+            };
+            localStorage.setItem('zaikaUser', JSON.stringify(currentUser));
+            updateHeaderUser();
+            closeAuthModal();
+        }
 
-            installBtn.addEventListener('click', async () => {
-                installBanner.style.display = 'none';
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
+        function updateHeaderUser() {
+            document.getElementById('header-user-name').innerText = currentUser ? currentUser.name.split(' ')[0] : 'Login';
+        }
+
+        // Initialize ETA Options
+        function initEta() {
+            const sel = document.getElementById('eta-select');
+            const times = ["02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM", "09:00 PM"];
+            times.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t; opt.innerText = t;
+                sel.appendChild(opt);
             });
-        });
-
-        const isIos = () => {
-          const userAgent = window.navigator.userAgent.toLowerCase();
-          return /iphone|ipad|ipod/.test(userAgent);
-        }
-        const isStandalone = () => {
-            return ('standalone' in window.navigator) && (window.navigator.standalone);
         }
 
-        if (isIos() && !isStandalone()) {
-            installBanner.style.display = 'flex';
-            installBtn.style.display = 'none'; 
-            installText.innerHTML = 'Tap <i class="fas fa-share-square"></i> below and select <b>Add to Home Screen</b>';
-        }
+        window.onload = () => {
+            updateHeaderUser();
+            initEta();
+        };
     </script>
 </body>
 </html>
