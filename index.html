@@ -366,7 +366,7 @@
                 </button>
             </div>
             
-            <div class="glass p-4 rounded-2xl border border-white/10 mb-6 flex items-center gap-4">
+            <div class="glass p-4 rounded-2xl border-2 border-slate-200 dark:border-white/10 bg-white/50 dark:bg-black/40 mb-6 flex items-center gap-4">
                 <div class="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-black">
                     <i class="fas fa-user"></i>
                 </div>
@@ -682,10 +682,10 @@
                     const itemsStr = o.items.map(i => `${i.qty}x ${i.name}`).join(', ');
 
                     return `
-                    <div class="glass p-4 rounded-xl border border-white/5 space-y-2">
+                    <div class="glass p-4 rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white/50 dark:bg-black/40 shadow-sm space-y-2">
                         <div class="flex justify-between items-start mb-1">
                             <span class="text-[10px] font-black tracking-widest bg-success/20 text-success px-2 py-1 rounded uppercase">${o.id}</span>
-                            <span class="text-[10px] font-bold text-slate-400">${dateStr} &bull; ${timeStr}</span>
+                            <span class="text-[10px] font-bold text-slate-500">${dateStr} &bull; ${timeStr}</span>
                         </div>
                         <p class="text-sm dark:text-white text-slate-800 font-medium line-clamp-2 leading-tight">${itemsStr}</p>
                         <p class="text-sm font-black text-primary mt-1">₹${o.total}</p>
@@ -740,13 +740,18 @@
         }
 
         function updateHeaderUser() {
+            const btnEl = document.getElementById('header-user-btn');
             const nameEl = document.getElementById('header-user-name');
             const iconEl = document.getElementById('header-user-icon');
             
             if (currentUser) {
-                nameEl.innerText = currentUser.name.split(' ')[0];
-                iconEl.className = "fas fa-user-check text-xl text-success";
+                // Hide the login button in the top header entirely once logged in
+                btnEl.classList.add('hidden');
+                btnEl.classList.remove('flex');
             } else {
+                // Show the login button in the top header when not logged in
+                btnEl.classList.remove('hidden');
+                btnEl.classList.add('flex');
                 nameEl.innerText = 'Login';
                 iconEl.className = "fas fa-user-circle text-xl text-primary";
             }
