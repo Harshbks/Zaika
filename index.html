@@ -97,8 +97,7 @@
     <header class="sticky top-0 z-50 glass px-4 py-3 flex justify-between items-center transition-all duration-300">
         <div class="flex items-center gap-3 animate-slide-up">
             <div class="relative group">
-                <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika" class="h-10 w-10 rounded-xl object-contain shadow-lg group-hover:rotate-12 transition-transform">
-                <div class="absolute inset-0 rounded-xl bg-primary/20 animate-pulse -z-10"></div>
+                <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika" class="h-10 w-10 rounded-full object-cover shadow-lg">
             </div>
             <h1 class="font-extrabold text-xl tracking-tight dark:text-white text-slate-900">
                 Zaika <span class="text-primary">Biryani</span>
@@ -140,11 +139,9 @@
         <div id="category-view" class="space-y-6 animate-slide-up">
             <div class="flex justify-between items-end">
                 <h3 class="text-2xl font-bold dark:text-white text-slate-800">Explore Menu</h3>
-                <span class="text-primary text-sm font-semibold cursor-pointer">View All</span>
             </div>
             
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <!-- Staggered Entry using inline delay would normally go here, handled via logic -->
                 <div onclick="openCategory('list-biryani', 'Biryani')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
                     <img src="https://i.ibb.co/pVbmkGL/biryani.jpg" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -171,6 +168,24 @@
                         <p class="text-primary text-xs font-medium">Best Seller</p>
                     </div>
                 </div>
+                
+                <div onclick="openCategory('list-roti', 'Roti')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/HDsD6YWz/noodles.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Roti</p>
+                        <p class="text-primary text-xs font-medium">Best Seller</p>
+                    </div>
+                </div>
+                
+                <div onclick="openCategory('list-drink', 'Drink')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
+                    <img src="https://i.ibb.co/HDsD6YWz/noodles.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <p class="text-white font-bold text-lg">Drink</p>
+                        <p class="text-primary text-xs font-medium">Best Seller</p>
+                    </div>
+                </div>
 
                 <div onclick="openCategory('list-chilly', 'Chilly 🌶')" class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass btn-active cursor-pointer">
                     <img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
@@ -180,7 +195,6 @@
                         <p class="text-primary text-xs font-medium">Spicy Hits</p>
                     </div>
                 </div>
-                <!-- ... other categories added via same pattern -->
             </div>
         </div>
 
@@ -212,7 +226,7 @@
     </footer>
 
     <!-- Bottom Mobile Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 glass h-20 px-6 flex justify-around items-center z-[60] sm:hidden border-t border-white/10 rounded-t-3xl">
+    <nav class="fixed bottom-0 left-0 right-0 glass h-20 px-6 flex justify-around items-center z-[60] lg:hidden border-t border-white/10 rounded-t-3xl">
         <button onclick="goBack()" class="nav-item text-primary"><i class="fas fa-utensils text-xl"></i><span>Menu</span></button>
         <button onclick="toggleCart()" class="nav-item text-slate-400"><i class="fas fa-shopping-bag text-xl"></i><span>Orders</span></button>
         <button onclick="handleUserClick()" class="nav-item text-slate-400"><i class="fas fa-user text-xl"></i><span>Account</span></button>
@@ -295,7 +309,7 @@
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md z-[110] transform translate-x-full transition-transform duration-300 ease-in-out">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="toggleCart()"></div>
         <div class="absolute inset-y-0 right-0 w-full max-w-[400px] glass h-full flex flex-col border-l border-white/10">
-            <div class="p-6 border-bottom border-white/10 flex justify-between items-center">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
                 <h2 class="text-2xl font-black dark:text-white text-slate-900">Your Basket</h2>
                 <button onclick="toggleCart()" class="h-10 w-10 rounded-full glass flex items-center justify-center btn-active text-slate-600 dark:text-white">
                     <i class="fas fa-times text-xl"></i>
@@ -361,9 +375,25 @@
                 { name: 'Paneer Noodle', price: 110, img: 'https://i.ibb.co/HDsD6YWz/noodles.webp', category: 'noodle' },
                 { name: 'Chicken Noodle', price: 130, img: 'https://i.ibb.co/HDsD6YWz/noodles.webp', category: 'noodle' }
             ],
+            'list-roti': [
+                { name: 'Paratha', price: 20, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'roti' },
+                { name: 'Butter Paratha', price: 35, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'roti' },
+                { name: 'Laccha Paratha', price: 35, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'roti' },
+            ],
+            'list-drink': [
+                { name: 'Pepsi', price: 25, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' },
+                { name: 'Mountain Dew', price: 25, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' },
+                { name: 'Coca-Cola', price: 25, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' },
+                { name: 'Sprite', price: 25, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' },
+                { name: 'Campa', price: 45, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' },
+                { name: 'Lassi', price: 45, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'drink' }
+            ],
             'list-chilly': [
                 { name: 'Paneer Chilly', price: 140, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' },
-                { name: 'Chicken Chilly', price: 160, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' }
+                { name: 'Chicken Chilly', price: 160, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' },
+                { name: 'Boneless Chicken Lollipop', price: 140, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' },
+                { name: 'Chicken Lollipop', price: 160, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' },
+                { name: 'Manchurian', price: 160, img: 'https://i.ibb.co/1YQ9YbN7/chilly.webp', category: 'chilly' }
             ]
         };
 
@@ -425,6 +455,10 @@
             baseFullPrice = price;
             currentCategory = category;
             currentModalQty = 1;
+            
+            // Reset input values from previous opens
+            document.getElementById('radio-regular').checked = true;
+            document.querySelectorAll('.addon-cb').forEach(cb => cb.checked = false);
             
             document.getElementById('modal-img').src = img;
             document.getElementById('modal-name').innerText = name;
@@ -570,12 +604,24 @@
         }
 
         // Auth Logic
-        function handleUserClick() { currentUser ? showProfileModal() : showAuthModal(); }
+        function handleUserClick() { 
+            currentUser ? showProfileModal() : showAuthModal(); 
+        }
+
+        function showProfileModal() {
+            if(confirm(`Logged in as ${currentUser.name}\n\nWould you like to sign out?`)) {
+                localStorage.removeItem('zaikaUser');
+                currentUser = null;
+                updateHeaderUser();
+            }
+        }
+
         function showAuthModal() { 
             document.getElementById('auth-modal').classList.remove('hidden');
             document.getElementById('auth-modal').classList.add('flex');
             setTimeout(() => document.getElementById('auth-sheet').classList.remove('scale-90'), 10);
         }
+
         function closeAuthModal() {
             document.getElementById('auth-sheet').classList.add('scale-90');
             setTimeout(() => {
