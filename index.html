@@ -24,8 +24,21 @@
             justify-content: space-between; align-items: center;
             box-shadow: var(--shadow); position: sticky; top: 0; z-index: 90;
         }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); }
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--text-dark); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
         .logo span { color: var(--primary-color); }
+        .brand-logo { 
+            height: 40px; 
+            width: auto; 
+            border-radius: 8px; 
+            object-fit: contain; 
+        }
         .cart-icon { 
             cursor: pointer; font-weight: 600; font-size: 1rem;
             display: flex; align-items: center; gap: 8px;
@@ -44,7 +57,7 @@
         }
         .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
 
-        /* --- NEW: Category Grid View --- */
+        /* --- Category Grid View --- */
         .menu-wrapper { padding: 0 5% 6rem; max-width: 900px; margin: 0 auto; min-height: 50vh;}
         
         .main-title { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text-dark); text-align: center; }
@@ -63,7 +76,7 @@
         .big-cat-card img { width: 100%; height: 120px; object-fit: cover; }
         .big-cat-card h3 { padding: 1rem 0.5rem; font-size: 1.1rem; color: var(--text-dark); }
 
-        /* --- NEW: Items List View (Hidden by default) --- */
+        /* --- Items List View (Hidden by default) --- */
         #items-view { display: none; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
@@ -148,7 +161,10 @@
 <body>
 
     <header>
-        <div class="logo">Zaika <span>Biryani</span></div>
+        <div class="logo">
+            <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika Logo" class="brand-logo">
+            Zaika <span>Biryani</span>
+        </div>
         <div class="cart-icon" onclick="toggleCart()">
             🛒 Cart <span class="count-badge" id="cart-count">0</span>
         </div>
@@ -164,31 +180,31 @@
             <h2 class="main-title">Explore Our Menu</h2>
             <div class="big-category-grid">
                 <div class="big-cat-card" onclick="openCategory('list-biryani', 'Biryani')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Biryani" alt="Biryani">
+                    <img src="https://i.ibb.co/pVbmkGL/biryani.jpg" alt="Biryani">
                     <h3>Biryani</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-roll', 'Rolls')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Rolls" alt="Rolls">
+                    <img src="https://i.ibb.co/d0c5XbJC/roll.webp" alt="Rolls">
                     <h3>Roll</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-noodles', 'Noodles')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Noodles" alt="Noodles">
+                    <img src="https://i.ibb.co/HDsD6YWz/noodles.webp" alt="Noodles">
                     <h3>Noodles</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-chilly', 'Chilly 🌶')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Chilly" alt="Chilly">
+                    <img src="https://i.ibb.co/1YQ9YbN7/chilly.webp" alt="Chilly">
                     <h3>Chilly 🌶</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-combo', 'Combos')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Combo" alt="Combo">
+                    <img src="https://i.ibb.co/bRJ0xqxT/Manchurian.webp" alt="Combo">
                     <h3>Combo</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-roti', 'Roti')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Roti" alt="Roti">
+                    <img src="https://i.ibb.co/fzbCsxMW/Paratha.jpg" alt="Roti">
                     <h3>Roti</h3>
                 </div>
                 <div class="big-cat-card" onclick="openCategory('list-drinks', 'Drinks')">
-                    <img src="https://placehold.co/400x300/eee/999?text=Drinks" alt="Drinks">
+                    <img src="https://i.ibb.co/84TJfH5G/drink.jpg" alt="Drinks">
                     <h3>Drinks</h3>
                 </div>
             </div>
@@ -441,7 +457,10 @@
                 </div>
             </div>
 
-        </div> </div> <footer>
+        </div> 
+    </div> 
+    
+    <footer>
         <h2>Zaika Biryani</h2>
         <p>Station Road Sonpur , Saran , Bihar</p>
         <p>Call us: +91 73690 62084</p>
@@ -518,33 +537,27 @@
     </div>
 
     <script>
-        // --- NEW CATEGORY SWITCHING LOGIC ---
+        // --- CATEGORY SWITCHING LOGIC ---
         function openCategory(listId, categoryName) {
-            // Hide Category Grid, Show Items View
             document.getElementById('category-view').style.display = 'none';
             document.getElementById('items-view').style.display = 'block';
             
-            // Update Title
             document.getElementById('dynamic-category-title').innerText = categoryName;
 
-            // Hide all item lists, then show the targeted one
             let allLists = document.querySelectorAll('.item-list-container');
             allLists.forEach(list => list.classList.remove('active'));
             
             document.getElementById(listId).classList.add('active');
             
-            // Scroll to top of menu
             document.querySelector('.menu-wrapper').scrollIntoView({ behavior: 'smooth' });
         }
 
         function goBack() {
-            // Hide Items View, Show Category Grid
             document.getElementById('items-view').style.display = 'none';
             document.getElementById('category-view').style.display = 'block';
         }
 
-
-        // --- EXISTING CART & MODAL LOGIC (Untouched) ---
+        // --- CART & MODAL LOGIC ---
         let cart = [];
         let cartTotal = 0;
         let currentItem = null;
