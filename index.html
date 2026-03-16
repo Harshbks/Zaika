@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaika Biryani | Order Online</title>
+    <style>
+        /* Modern CSS Reset & Variables (Swiggy Style) */
+        :root {
+            --primary-color: #fc8019;
+            --secondary-color: #f1faee;
+            --text-dark: #282c3f;
+            --text-muted: #686b78;
+            --bg-color: #f8f9fa;
+            --green: #1ba672;
+            --shadow: 0 4px 14px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #fff; color: var(--text-dark); scroll-behavior: smooth; }
+
+        /* Navigation */
+        header {
+            background-color: #fff; padding: 1rem 5%; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: var(--shadow); position: sticky; top: 0; z-index: 90;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); }
+        .logo span { color: var(--primary-color); }
+        .cart-icon { 
+            cursor: pointer; font-weight: 600; font-size: 1rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .cart-icon .count-badge {
+            background: var(--primary-color); color: #fff;
+            padding: 2px 8px; border-radius: 12px; font-size: 0.9rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 25vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://placehold.co/1200x600/222/FFF?text=Zaika+Biryani') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: #fff; text-align: center; padding: 2rem; margin: 1rem 5%; border-radius: 20px;
+        }
+        .hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* --- NEW: Category Grid View --- */
+        .menu-wrapper { padding: 0 5% 6rem; max-width: 900px; margin: 0 auto; min-height: 50vh;}
+        
+        .main-title { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--text-dark); text-align: center; }
+        
+        .big-category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.5rem;
+        }
+        .big-cat-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: var(--shadow); cursor: pointer; transition: 0.3s;
+            text-align: center; border: 1px solid #eee;
+        }
+        .big-cat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .big-cat-card img { width: 100%; height: 120px; object-fit: cover; }
+        .big-cat-card h3 { padding: 1rem 0.5rem; font-size: 1.1rem; color: var(--text-dark); }
+
+        /* --- NEW: Items List View (Hidden by default) --- */
+        #items-view { display: none; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .back-header {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+            padding-bottom: 1rem; border-bottom: 2px solid #eee;
+        }
+        .back-btn {
+            background: #f4f4f5; border: none; padding: 0.5rem 1rem; border-radius: 8px;
+            font-weight: 600; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 5px;
+        }
+        .back-btn:hover { background: #e2e2e7; }
+        .category-title { font-size: 1.8rem; color: var(--text-dark); }
+
+        /* Item Cards */
+        .item-list-container { display: none; flex-direction: column; gap: 1.5rem; }
+        .item-list-container.active { display: flex; }
+
+        .card {
+            display: flex; justify-content: space-between; background: #fff;
+            border-bottom: 1px dashed #eee; padding-bottom: 1.5rem; transition: 0.3s;
+        }
+        .card:last-child { border-bottom: none; padding-bottom: 0; }
+        .card-content { flex: 1; padding-right: 2rem; }
+        .card-title { font-size: 1.2rem; margin-bottom: 0.3rem; color: var(--text-dark); }
+        .price { font-weight: 600; font-size: 1.05rem; color: var(--text-dark); display: block; margin-bottom: 0.5rem; }
+        .card-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; }
+        .card-image-wrapper { position: relative; width: 130px; height: 110px; border-radius: 12px; flex-shrink: 0; }
+        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        
+        .add-btn { 
+            position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+            background: #fff; color: var(--green); border: 1px solid #d4d5d9; 
+            padding: 0.4rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.9rem;
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer { background: var(--text-dark); color: #fff; text-align: center; padding: 3rem 5%; margin-top: 2rem; }
+        footer h2 { margin-bottom: 1rem; color: var(--primary-color); }
+
+        /* Bottom Sheet Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; flex-direction: column; justify-content: flex-end; }
+        .bottom-sheet { background: #f4f4f5; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 24px 24px 0 0; padding-bottom: 80px; position: relative; animation: slideUp 0.3s ease-out; max-height: 85vh; overflow-y: auto; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { background: #fff; padding: 1rem 1.5rem; border-radius: 24px 24px 0 0; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .modal-header img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .modal-header h3 { flex: 1; font-size: 1.1rem; }
+        .close-modal-btn { background: #e2e2e7; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; color: #555; }
+        .modal-body { padding: 1.5rem; background: #fff; margin-top: 8px; }
+        .section-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; color: #3e4152; }
+        .section-title span { font-weight: 400; font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 2px; }
+        .option-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px dashed #e9e9eb; cursor: pointer; }
+        .option-row:last-child { border-bottom: none; }
+        .opt-left { display: flex; align-items: center; gap: 12px; }
+        .opt-price { color: #3e4152; font-weight: 500; }
+        input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
+        .tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; border: 1px solid; margin-bottom: 4px; display: inline-block; }
+        .tag.red { color: #e63946; border-color: #e63946; background: #fdf2f2; }
+        .tag.green { color: var(--green); border-color: var(--green); background: #f0fbf6; }
+        .modal-bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; background: #fff; padding: 1rem 1.5rem; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); display: flex; gap: 1rem; align-items: center; z-index: 3; }
+        .qty-controls { display: flex; align-items: center; justify-content: space-between; border: 1px solid #d4d5d9; border-radius: 8px; padding: 0.5rem; width: 100px; font-weight: bold; color: var(--green); }
+        .qty-controls button { background: none; border: none; font-size: 1.2rem; color: var(--green); cursor: pointer; padding: 0 10px; }
+        .qty-controls span { color: var(--text-dark); }
+        .add-to-cart-btn { flex: 1; background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-align: center; }
+
+        /* Cart Sidebar */
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 100%; max-width: 350px; height: 100vh; background: #fff; box-shadow: -4px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease; z-index: 1001; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 1.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #eee; }
+        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .cart-item-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .cart-item-price { font-weight: 600; }
+        .cart-footer { padding: 1.5rem; border-top: 1px solid #eee; background: #f8f9fa; }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .checkout-btn { width: 100%; background: var(--green); color: #fff; border: none; padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .cart-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Zaika <span>Biryani</span></div>
+        <div class="cart-icon" onclick="toggleCart()">
+            🛒 Cart <span class="count-badge" id="cart-count">0</span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>What's on your mind?</h1>
+    </section>
+
+    <div class="menu-wrapper">
+        
+        <div id="category-view">
+            <h2 class="main-title">Explore Our Menu</h2>
+            <div class="big-category-grid">
+                <div class="big-cat-card" onclick="openCategory('list-biryani', 'Biryani')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Biryani" alt="Biryani">
+                    <h3>Biryani</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-roll', 'Rolls')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Rolls" alt="Rolls">
+                    <h3>Roll</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-noodles', 'Noodles')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Noodles" alt="Noodles">
+                    <h3>Noodles</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-chilly', 'Chilly 🌶')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Chilly" alt="Chilly">
+                    <h3>Chilly 🌶</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-combo', 'Combos')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Combo" alt="Combo">
+                    <h3>Combo</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-roti', 'Roti')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Roti" alt="Roti">
+                    <h3>Roti</h3>
+                </div>
+                <div class="big-cat-card" onclick="openCategory('list-drinks', 'Drinks')">
+                    <img src="https://placehold.co/400x300/eee/999?text=Drinks" alt="Drinks">
+                    <h3>Drinks</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="items-view">
+            <div class="back-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h2 class="category-title" id="dynamic-category-title">Category Name</h2>
+            </div>
+
+            <div class="item-list-container" id="list-biryani">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Chicken Biryani</h3>
+                        <span class="price">₹180.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Biryani" alt="Chicken Biryani">
+                        <button class="add-btn" onclick="openModal('Chicken Biryani', 180.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Veg Biryani</h3>
+                        <span class="price">₹140.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Biryani" alt="Veg Biryani">
+                        <button class="add-btn" onclick="openModal('Veg Biryani', 140.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Paneer Biryani</h3>
+                        <span class="price">₹160.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Biryani" alt="Paneer Biryani">
+                        <button class="add-btn" onclick="openModal('Paneer Biryani', 160.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-roll">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Egg Roll</h3>
+                        <span class="price">₹50.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Egg+Roll" alt="Egg Roll">
+                        <button class="add-btn" onclick="openModal('Egg Roll', 50.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Veg Roll</h3>
+                        <span class="price">₹40.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Roll" alt="Veg Roll">
+                        <button class="add-btn" onclick="openModal('Veg Roll', 40.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Paneer Roll</h3>
+                        <span class="price">₹70.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Roll" alt="Paneer Roll">
+                        <button class="add-btn" onclick="openModal('Paneer Roll', 70.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Chicken Roll</h3>
+                        <span class="price">₹80.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Roll" alt="Chicken Roll">
+                        <button class="add-btn" onclick="openModal('Chicken Roll', 80.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-noodles">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Veg Noodles</h3>
+                        <span class="price">₹90.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Veg+Noodles" alt="Veg Noodles">
+                        <button class="add-btn" onclick="openModal('Veg Noodles', 90.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Paneer Noodle</h3>
+                        <span class="price">₹110.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Noodle" alt="Paneer Noodle">
+                        <button class="add-btn" onclick="openModal('Paneer Noodle', 110.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Chicken Noodle</h3>
+                        <span class="price">₹130.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Noodle" alt="Chicken Noodle">
+                        <button class="add-btn" onclick="openModal('Chicken Noodle', 130.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-chilly">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Paneer Chilly</h3>
+                        <span class="price">₹140.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Paneer+Chilly" alt="Paneer Chilly">
+                        <button class="add-btn" onclick="openModal('Paneer Chilly', 140.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Chicken Chilly</h3>
+                        <span class="price">₹160.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Chilly" alt="Chicken Chilly">
+                        <button class="add-btn" onclick="openModal('Chicken Chilly', 160.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-combo">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Chicken Lollipop Boneless</h3>
+                        <span class="price">₹150.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Chicken+Lollipop" alt="Chicken Lollipop">
+                        <button class="add-btn" onclick="openModal('Chicken Lollipop Boneless', 150.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Manchurian</h3>
+                        <span class="price">₹120.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Manchurian" alt="Manchurian">
+                        <button class="add-btn" onclick="openModal('Manchurian', 120.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-roti">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Laccha Paratha</h3>
+                        <span class="price">₹30.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Laccha+Paratha" alt="Laccha Paratha">
+                        <button class="add-btn" onclick="openModal('Laccha Paratha', 30.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Paratha</h3>
+                        <span class="price">₹20.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Paratha" alt="Paratha">
+                        <button class="add-btn" onclick="openModal('Paratha', 20.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Butter Paratha</h3>
+                        <span class="price">₹25.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Butter+Paratha" alt="Butter Paratha">
+                        <button class="add-btn" onclick="openModal('Butter Paratha', 25.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list-container" id="list-drinks">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Pepsi</h3>
+                        <span class="price">₹40.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Pepsi" alt="Pepsi">
+                        <button class="add-btn" onclick="openModal('Pepsi', 40.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Coke</h3>
+                        <span class="price">₹40.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Coke" alt="Coke">
+                        <button class="add-btn" onclick="openModal('Coke', 40.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Sprite</h3>
+                        <span class="price">₹40.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Sprite" alt="Sprite">
+                        <button class="add-btn" onclick="openModal('Sprite', 40.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Dew</h3>
+                        <span class="price">₹40.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Dew" alt="Dew">
+                        <button class="add-btn" onclick="openModal('Dew', 40.00, this)">ADD</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Lassi</h3>
+                        <span class="price">₹50.00</span>
+                    </div>
+                    <div class="card-image-wrapper">
+                        <img src="https://placehold.co/600x400/eee/999?text=Lassi" alt="Lassi">
+                        <button class="add-btn" onclick="openModal('Lassi', 50.00, this)">ADD</button>
+                    </div>
+                </div>
+            </div>
+
+        </div> </div> <footer>
+        <h2>Zaika Biryani</h2>
+        <p>Station Road Sonpur , Saran , Bihar</p>
+        <p>Call us: +91 73690 62084</p>
+    </footer>
+
+    <div id="item-modal" class="modal-overlay">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <img id="modal-img" src="" alt="Item">
+                <h3 id="modal-name">Item Name</h3>
+                <button class="close-modal-btn" onclick="closeModal()">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="section-title">Quantity <span>Select any 1</span></div>
+                <label class="option-row">
+                    <div class="opt-left">
+                        <input type="radio" name="portion" id="radio-mini" value="Mini" onchange="calculateModalTotal()">
+                        <div>Mini <span style="font-size: 0.8rem; color: #686b78;">(Half)</span></div>
+                    </div>
+                    <div class="opt-price">₹<span id="price-mini">0</span></div>
+                </label>
+                <label class="option-row">
+                    <div class="opt-left">
+                        <input type="radio" name="portion" id="radio-regular" value="Regular" checked onchange="calculateModalTotal()">
+                        <div>Regular <span style="font-size: 0.8rem; color: #686b78;">(Full)</span></div>
+                    </div>
+                    <div class="opt-price">₹<span id="price-regular">0</span></div>
+                </label>
+            </div>
+
+            <div class="modal-body">
+                <div class="section-title">Add Ons <span>Select upto 3</span></div>
+                <label class="option-row">
+                    <div class="opt-left">
+                        <input type="checkbox" class="addon-cb" value="Raita" data-price="10" onchange="calculateModalTotal()">
+                        <div><span class="tag green">Bestseller</span><br>Raita</div>
+                    </div>
+                    <div class="opt-price">+ ₹10</div>
+                </label>
+                <label class="option-row">
+                    <div class="opt-left">
+                        <input type="checkbox" class="addon-cb" value="Egg" data-price="20" onchange="calculateModalTotal()">
+                        <div><span class="tag red">Protein Rich</span><br>Egg [1 Pc]</div>
+                    </div>
+                    <div class="opt-price">+ ₹20</div>
+                </label>
+            </div>
+
+            <div class="modal-bottom-bar">
+                <div class="qty-controls">
+                    <button onclick="changeModalQty(-1)">-</button>
+                    <span id="modal-qty">1</span>
+                    <button onclick="changeModalQty(1)">+</button>
+                </div>
+                <button class="add-to-cart-btn" onclick="confirmAddToCart()">
+                    Add Item | ₹<span id="modal-btn-total">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-backdrop" id="cart-backdrop" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Cart</h2>
+            <button style="background:none; border:none; font-size:1.5rem; cursor:pointer;" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row"><span>Subtotal</span><span>₹<span id="cart-total-price">0.00</span></span></div>
+            <button class="checkout-btn" onclick="alert('Proceeding to Checkout!')">CHECKOUT</button>
+        </div>
+    </div>
+
+    <script>
+        // --- NEW CATEGORY SWITCHING LOGIC ---
+        function openCategory(listId, categoryName) {
+            // Hide Category Grid, Show Items View
+            document.getElementById('category-view').style.display = 'none';
+            document.getElementById('items-view').style.display = 'block';
+            
+            // Update Title
+            document.getElementById('dynamic-category-title').innerText = categoryName;
+
+            // Hide all item lists, then show the targeted one
+            let allLists = document.querySelectorAll('.item-list-container');
+            allLists.forEach(list => list.classList.remove('active'));
+            
+            document.getElementById(listId).classList.add('active');
+            
+            // Scroll to top of menu
+            document.querySelector('.menu-wrapper').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goBack() {
+            // Hide Items View, Show Category Grid
+            document.getElementById('items-view').style.display = 'none';
+            document.getElementById('category-view').style.display = 'block';
+        }
+
+
+        // --- EXISTING CART & MODAL LOGIC (Untouched) ---
+        let cart = [];
+        let cartTotal = 0;
+        let currentItem = null;
+        let baseFullPrice = 0;
+        let currentModalQty = 1;
+
+        function openModal(name, price, btnElement) {
+            currentItem = name;
+            baseFullPrice = price;
+            currentModalQty = 1;
+            
+            let cardImage = btnElement.closest('.card').querySelector('img').src;
+            document.getElementById('modal-img').src = cardImage;
+            document.getElementById('modal-name').innerText = name;
+            
+            let miniPrice = (price / 2).toFixed(2);
+            document.getElementById('price-regular').innerText = price.toFixed(2);
+            document.getElementById('price-mini').innerText = miniPrice;
+            
+            document.getElementById('radio-regular').checked = true;
+            document.getElementById('modal-qty').innerText = currentModalQty;
+            let checkboxes = document.querySelectorAll('.addon-cb');
+            checkboxes.forEach(cb => cb.checked = false);
+
+            calculateModalTotal();
+            document.getElementById('item-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('item-modal').style.display = 'none';
+        }
+
+        function changeModalQty(change) {
+            if (currentModalQty + change >= 1) {
+                currentModalQty += change;
+                document.getElementById('modal-qty').innerText = currentModalQty;
+                calculateModalTotal();
+            }
+        }
+
+        function calculateModalTotal() {
+            let itemPrice = document.getElementById('radio-regular').checked ? baseFullPrice : baseFullPrice / 2;
+            let addonsTotal = 0;
+            document.querySelectorAll('.addon-cb:checked').forEach(cb => {
+                addonsTotal += parseFloat(cb.getAttribute('data-price'));
+            });
+            let finalPrice = (itemPrice + addonsTotal) * currentModalQty;
+            document.getElementById('modal-btn-total').innerText = finalPrice.toFixed(2);
+        }
+
+        function confirmAddToCart() {
+            let size = document.getElementById('radio-regular').checked ? "Regular" : "Mini";
+            let selectedAddons = [];
+            document.querySelectorAll('.addon-cb:checked').forEach(cb => {
+                selectedAddons.push(cb.value);
+            });
+            let finalName = `${currentItem} (${size})`;
+            if (selectedAddons.length > 0) finalName += ` + ${selectedAddons.join(', ')}`;
+            let finalPrice = parseFloat(document.getElementById('modal-btn-total').innerText);
+
+            cart.push({ name: finalName, price: finalPrice, qty: currentModalQty });
+            cartTotal += finalPrice;
+            document.getElementById('cart-count').innerText = cart.length;
+            
+            closeModal();
+            renderCart();
+            document.getElementById('cart-sidebar').classList.add('open');
+            document.getElementById('cart-backdrop').style.display = 'block';
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const backdrop = document.getElementById('cart-backdrop');
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                backdrop.style.display = 'none';
+            } else {
+                sidebar.classList.add('open');
+                backdrop.style.display = 'block';
+                renderCart();
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total-price');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #686b78; margin-top: 20px;">Your cart is empty</p>';
+                totalEl.innerText = "0.00";
+                return;
+            }
+            let html = '';
+            cart.forEach(item => {
+                html += `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>Qty: ${item.qty}</p>
+                    </div>
+                    <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            totalEl.innerText = cartTotal.toFixed(2);
+        }
+    </script>
+</body>
+</html>
