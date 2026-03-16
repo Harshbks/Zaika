@@ -347,7 +347,7 @@
         <div class="cart-items" id="cart-items-container"></div>
         <div class="cart-footer">
             <div class="cart-total-row"><span>Subtotal</span><span>₹<span id="cart-total-price">0.00</span></span></div>
-            <button class="checkout-btn" onclick="processCheckout()">PLACE ORDER</button>
+            <button class="checkout-btn" onclick="processCheckout()">PLACE ORDER VIA WHATSAPP</button>
         </div>
     </div>
 
@@ -381,18 +381,21 @@
         </div>
     </div>
 
-    <script>
-        // --- PWA SERVICE WORKER REGISTRATION ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
-                    console.log('PWA ServiceWorker registered', reg);
-                }).catch(err => {
-                    console.log('PWA ServiceWorker registration failed: ', err);
-                });
-            });
-        }
+    <div id="install-banner" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--primary-color); color: #fff; padding: 1rem; z-index: 9999; justify-content: space-between; align-items: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.3);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" style="width: 40px; height: 40px; border-radius: 8px;">
+            <div>
+                <strong style="display: block; font-size: 1rem; color: #fff;">Install Zaika App</strong>
+                <span id="install-text" style="font-size: 0.8rem; opacity: 0.9; color: #fff;">Order faster next time!</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button id="install-btn" style="background: #fff; color: var(--primary-color); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; cursor: pointer;">INSTALL</button>
+            <button onclick="document.getElementById('install-banner').style.display='none'" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+    </div>
 
+    <script>
         // --- THEME TOGGLE ---
         const themeBtn = document.getElementById('themeBtn');
         const themeIcon = themeBtn.querySelector('i');
@@ -483,7 +486,7 @@
                 email: document.getElementById('auth-email').value 
             };
             localStorage.setItem('zaikaUser', JSON.stringify(currentUser));
-            updateHeaderUser(); closeAuthModal(); alert(`Welcome back!`);
+            updateHeaderUser(); closeAuthModal(); alert(`Welcome back, ${currentUser.name}!`);
         }
 
         function handleLogout() {
@@ -631,6 +634,7 @@
             document.getElementById('cart-count').innerText = cart.length; 
         }
 
+        // --- NEW WHATSAPP CHECKOUT LOGIC ---
         function processCheckout() {
             if (cart.length === 0) return alert("Your cart is empty!");
             if (!currentUser) {
@@ -638,16 +642,70 @@
             }
 
             let finalTotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+            
+            // 1. Save to Order History
             let orderDetails = {
                 id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleString(),
                 items: [...cart], total: finalTotal
             };
-            
             orderHistory.push(orderDetails);
             localStorage.setItem('zaikaOrderHistory', JSON.stringify(cleanOldOrders(orderHistory)));
 
-            alert("🎉 Order placed successfully!");
+            // 2. Format WhatsApp Message
+            const shopPhone = "917369062084"; // Your WhatsApp Number
+            let message = `*New Order from Zaika Biryani!* 🍛\n\n`;
+            message += `*Customer Details:*\n`;
+            message += `Name: ${currentUser.name}\n`;
+            message += `Mobile: ${currentUser.mobile}\n`;
+            message += `Email: ${currentUser.email}\n\n`;
+            message += `*Order Details:*\n`;
+            
+            cart.forEach(item => {
+                message += `${item.qty}x ${item.name} - ₹${(item.unitPrice * item.qty).toFixed(2)}\n`;
+            });
+            
+            message += `\n*Total Amount: ₹${finalTotal.toFixed(2)}*\n\n`;
+            message += `Please confirm my order!`;
+
+            // 3. Open WhatsApp
+            const whatsappUrl = `https://wa.me/${shopPhone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // 4. Reset Cart
             cart = []; updateCartUI(); toggleCart(); 
+        }
+
+        // --- SMART INSTALL BANNER LOGIC ---
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('install-btn');
+        const installText = document.getElementById('install-text');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'flex';
+
+            installBtn.addEventListener('click', async () => {
+                installBanner.style.display = 'none';
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            });
+        });
+
+        const isIos = () => {
+          const userAgent = window.navigator.userAgent.toLowerCase();
+          return /iphone|ipad|ipod/.test(userAgent);
+        }
+        const isStandalone = () => {
+            return ('standalone' in window.navigator) && (window.navigator.standalone);
+        }
+
+        if (isIos() && !isStandalone()) {
+            installBanner.style.display = 'flex';
+            installBtn.style.display = 'none'; 
+            installText.innerHTML = 'Tap <i class="fas fa-share-square"></i> below and select <b>Add to Home Screen</b>';
         }
     </script>
 </body>
