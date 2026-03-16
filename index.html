@@ -12,13 +12,12 @@
 
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#e11d48', /* Changed to Appetizing Rose/Red */
-                        secondary: '#1e1b4b', /* Changed to Deep Indigo */
-                        success: '#10b981', /* Changed to Emerald */
+                        primary: '#e11d48',
+                        secondary: '#1e1b4b',
+                        success: '#10b981',
                     },
                     animation: {
                         'gradient-x': 'gradient-x 15s ease infinite',
@@ -52,13 +51,7 @@
     <style type="text/tailwindcss">
         @layer components {
             .glass {
-                @apply backdrop-blur-xl border border-white/10 shadow-2xl;
-            }
-            .dark .glass {
-                @apply bg-black/40 border-white/5;
-            }
-            .light .glass {
-                @apply bg-white/70 border-gray-200;
+                @apply backdrop-blur-xl bg-white/70 border border-gray-200 shadow-2xl;
             }
             .btn-active {
                 @apply active:scale-95 transition-transform duration-200;
@@ -75,23 +68,14 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Background Animated Gradient - Updated to match new theme */
+        /* Background Animated Gradient */
         .bg-animated {
-            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e293b);
-            background-size: 400% 400%;
-        }
-        .light .bg-animated {
             background: linear-gradient(-45deg, #fff1f2, #ffe4e6, #fecdd3, #fff1f2);
+            background-size: 400% 400%;
         }
     </style>
 </head>
-<body class="bg-animated animate-gradient-x min-h-screen text-slate-100 transition-colors duration-500 overflow-x-hidden">
-
-    <script>
-        // Initial Theme Check
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.classList.add(savedTheme);
-    </script>
+<body class="bg-animated animate-gradient-x min-h-screen text-slate-900 transition-colors duration-500 overflow-x-hidden">
 
     <!-- Header (Professional Sticky) -->
     <header class="sticky top-0 z-50 glass px-4 py-3 flex justify-between items-center transition-all duration-300">
@@ -99,24 +83,19 @@
             <div class="relative group">
                 <img src="https://i.ibb.co/5QLSVjS/Screenshot-2026-03-16-151646.png" alt="Zaika" class="h-10 w-10 rounded-full object-cover shadow-lg">
             </div>
-            <h1 class="font-extrabold text-xl tracking-tight dark:text-white text-slate-900">
+            <h1 class="font-extrabold text-xl tracking-tight text-slate-900">
                 Zaika <span class="text-primary">Biryani</span>
             </h1>
         </div>
 
         <div class="flex items-center gap-2 sm:gap-4">
-            <button id="themeBtn" class="w-10 h-10 rounded-full glass flex items-center justify-center text-lg btn-active dark:text-yellow-400 text-slate-700">
-                <i class="fas fa-moon transition-all duration-500 rotate-0 dark:hidden"></i>
-                <i class="fas fa-sun transition-all duration-500 dark:block hidden"></i>
-            </button>
-            
-            <button onclick="toggleCart()" class="relative glass h-10 px-3 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
+            <button onclick="toggleCart()" class="relative glass h-10 px-3 rounded-full flex items-center gap-2 btn-active text-slate-700">
                 <i class="fas fa-shopping-basket text-lg text-primary"></i>
                 <span class="hidden sm:inline font-semibold">Cart</span>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center animate-scale-pop">0</span>
             </button>
 
-            <button id="header-user-btn" onclick="handleUserClick()" class="glass h-10 w-10 sm:w-auto sm:px-4 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
+            <button id="header-user-btn" onclick="handleUserClick()" class="glass h-10 w-10 sm:w-auto sm:px-4 rounded-full flex items-center gap-2 btn-active text-slate-700">
                 <i id="header-user-icon" class="fas fa-user-circle text-xl text-primary"></i>
                 <span id="header-user-name" class="hidden sm:inline font-bold">Login</span>
             </button>
@@ -129,7 +108,7 @@
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?q=80&w=1200&auto=format&fit=crop');"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
             <div class="absolute bottom-6 left-6 animate-float">
-                <span class="bg-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 block w-max">Exclusive Deal</span>
+                <span class="bg-primary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 block w-max text-white">Exclusive Deal</span>
                 <h2 class="text-white text-3xl font-extrabold drop-shadow-lg">What's on your mind?</h2>
                 <p class="text-gray-300 text-sm mt-1">Authentic flavors from Sonpur delivered fresh.</p>
             </div>
@@ -138,7 +117,7 @@
         <!-- Category Grid -->
         <div id="category-view" class="space-y-6 animate-slide-up">
             <div class="flex justify-between items-end">
-                <h3 class="text-2xl font-bold dark:text-white text-slate-800">Explore Menu</h3>
+                <h3 class="text-2xl font-bold text-slate-800">Explore Menu</h3>
             </div>
             
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -201,10 +180,10 @@
         <!-- Items View (Hidden by default) -->
         <div id="items-view" class="hidden animate-slide-up">
             <div class="flex items-center gap-4 mb-8">
-                <button onclick="goBack()" class="h-12 w-12 rounded-2xl glass flex items-center justify-center btn-active text-slate-800 dark:text-white">
+                <button onclick="goBack()" class="h-12 w-12 rounded-2xl glass flex items-center justify-center btn-active text-slate-800">
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <h2 id="dynamic-category-title" class="text-3xl font-extrabold dark:text-white text-slate-900">Category</h2>
+                <h2 id="dynamic-category-title" class="text-3xl font-extrabold text-slate-900">Category</h2>
             </div>
 
             <div id="items-container" class="grid gap-4">
@@ -228,8 +207,8 @@
     <!-- Bottom Mobile Nav -->
     <nav class="fixed bottom-0 left-0 right-0 glass h-20 px-6 flex justify-around items-center z-[60] lg:hidden border-t border-white/10 rounded-t-3xl">
         <button onclick="goBack()" class="nav-item text-primary"><i class="fas fa-utensils text-xl"></i><span>Menu</span></button>
-        <button onclick="toggleCart()" class="nav-item text-slate-400"><i class="fas fa-shopping-bag text-xl"></i><span>Orders</span></button>
-        <button onclick="handleUserClick()" class="nav-item text-slate-400"><i class="fas fa-user text-xl"></i><span>Account</span></button>
+        <button onclick="toggleCart()" class="nav-item text-slate-500"><i class="fas fa-shopping-bag text-xl"></i><span>Orders</span></button>
+        <button onclick="handleUserClick()" class="nav-item text-slate-500"><i class="fas fa-user text-xl"></i><span>Account</span></button>
     </nav>
 
     <!-- MODALS & SIDEBARS -->
@@ -241,9 +220,9 @@
             <div class="sticky top-0 glass z-10 px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-4">
                     <img id="modal-img" class="h-14 w-14 rounded-2xl object-cover shadow-lg border border-white/20">
-                    <h3 id="modal-name" class="text-xl font-extrabold dark:text-white text-slate-900">Item Name</h3>
+                    <h3 id="modal-name" class="text-xl font-extrabold text-slate-900">Item Name</h3>
                 </div>
-                <button onclick="closeModal()" class="h-10 w-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center btn-active dark:text-white text-slate-800">
+                <button onclick="closeModal()" class="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center btn-active text-slate-800">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -256,7 +235,7 @@
                         <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary group">
                             <div class="flex items-center gap-3">
                                 <input type="radio" name="portion" id="radio-mini" value="Mini" class="w-5 h-5 accent-primary" onchange="calculateModalTotal()">
-                                <div class="dark:text-white text-slate-800">
+                                <div class="text-slate-800">
                                     <p class="font-bold">Mini (Half)</p>
                                     <p class="text-xs opacity-50">Standard serving</p>
                                 </div>
@@ -266,7 +245,7 @@
                         <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary group">
                             <div class="flex items-center gap-3">
                                 <input type="radio" name="portion" id="radio-regular" value="Regular" checked class="w-5 h-5 accent-primary" onchange="calculateModalTotal()">
-                                <div class="dark:text-white text-slate-800">
+                                <div class="text-slate-800">
                                     <p class="font-bold">Regular (Full)</p>
                                     <p class="text-xs opacity-50">Hearty meal</p>
                                 </div>
@@ -282,7 +261,7 @@
                     <label class="flex items-center justify-between p-4 rounded-2xl glass cursor-pointer border-2 border-transparent transition-all has-[:checked]:border-primary">
                         <div class="flex items-center gap-3">
                             <input type="checkbox" class="addon-cb w-5 h-5 accent-primary" value="Egg" data-price="20" onchange="calculateModalTotal()">
-                            <div class="dark:text-white text-slate-800">
+                            <div class="text-slate-800">
                                 <span class="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">Protein Rich</span>
                                 <p class="font-bold">Egg [1 Pc]</p>
                             </div>
@@ -295,7 +274,7 @@
             <div class="sticky bottom-0 glass p-6 border-t border-white/10 flex gap-4 items-center">
                 <div class="flex items-center glass p-2 rounded-2xl gap-4 border-white/20">
                     <button onclick="changeModalQty(-1)" class="h-10 w-10 flex items-center justify-center text-primary font-black text-xl btn-active">-</button>
-                    <span id="modal-qty" class="font-bold text-lg dark:text-white text-slate-900 w-4 text-center">1</span>
+                    <span id="modal-qty" class="font-bold text-lg text-slate-900 w-4 text-center">1</span>
                     <button onclick="changeModalQty(1)" class="h-10 w-10 flex items-center justify-center text-primary font-black text-xl btn-active">+</button>
                 </div>
                 <button onclick="confirmAddToCart()" class="flex-1 h-14 bg-primary text-white font-black text-lg rounded-2xl shadow-xl shadow-primary/20 btn-active hover:brightness-110">
@@ -309,9 +288,9 @@
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md z-[110] transform translate-x-full transition-transform duration-300 ease-in-out">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="toggleCart()"></div>
         <div class="absolute inset-y-0 right-0 w-full max-w-[400px] glass h-full flex flex-col border-l border-white/10">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center">
-                <h2 class="text-2xl font-black dark:text-white text-slate-900">Your Basket</h2>
-                <button onclick="toggleCart()" class="h-10 w-10 rounded-full glass flex items-center justify-center btn-active text-slate-600 dark:text-white">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-2xl font-black text-slate-900">Your Basket</h2>
+                <button onclick="toggleCart()" class="h-10 w-10 rounded-full glass flex items-center justify-center btn-active text-slate-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
@@ -320,15 +299,15 @@
                 <!-- Cart items go here -->
             </div>
 
-            <div class="p-6 glass border-t border-white/10 space-y-4 rounded-t-[30px]">
+            <div class="p-6 glass border-t border-gray-200 space-y-4 rounded-t-[30px]">
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase tracking-widest text-primary"><i class="far fa-clock mr-1"></i> Arrival Time</label>
-                    <select id="eta-select" class="w-full h-12 glass rounded-xl px-4 font-bold text-slate-900 dark:text-white outline-none focus:ring-2 ring-primary">
+                    <select id="eta-select" class="w-full h-12 glass rounded-xl px-4 font-bold text-slate-900 outline-none focus:ring-2 ring-primary">
                         <option value="" disabled selected>When will you arrive?</option>
                         <!-- Options generated -->
                     </select>
                 </div>
-                <div class="flex justify-between items-center text-xl font-black dark:text-white text-slate-900">
+                <div class="flex justify-between items-center text-xl font-black text-slate-900">
                     <span>Total Pay</span>
                     <span class="text-success">₹<span id="cart-total-price">0.00</span></span>
                 </div>
@@ -343,12 +322,12 @@
     <div id="auth-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeAuthModal()"></div>
         <div class="glass w-full max-w-sm rounded-[40px] p-8 relative transform scale-90 transition-transform duration-300" id="auth-sheet">
-            <h2 class="text-2xl font-black mb-1 dark:text-white text-slate-900">Welcome!</h2>
-            <p class="text-slate-400 text-sm mb-8">Sign in to save your order history.</p>
+            <h2 class="text-2xl font-black mb-1 text-slate-900">Welcome!</h2>
+            <p class="text-slate-500 text-sm mb-8">Sign in to save your order history.</p>
             <form onsubmit="handleLogin(event)" class="space-y-4">
-                <input type="text" id="auth-name" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Full Name" required>
-                <input type="tel" id="auth-mobile" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Mobile Number" required>
-                <input type="email" id="auth-email" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary dark:text-white text-slate-900" placeholder="Email Address" required>
+                <input type="text" id="auth-name" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary text-slate-900" placeholder="Full Name" required>
+                <input type="tel" id="auth-mobile" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary text-slate-900" placeholder="Mobile Number" required>
+                <input type="email" id="auth-email" class="w-full h-14 glass rounded-2xl px-6 outline-none focus:ring-2 ring-primary text-slate-900" placeholder="Email Address" required>
                 <button type="submit" class="w-full h-14 bg-primary text-white font-black rounded-2xl btn-active shadow-lg">Sign In Now</button>
                 <button type="button" onclick="closeAuthModal()" class="w-full py-2 text-slate-500 font-bold text-sm">Maybe Later</button>
             </form>
@@ -360,13 +339,13 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProfileModal()"></div>
         <div class="glass w-full max-w-md rounded-[40px] p-8 relative transform scale-90 transition-transform duration-300 flex flex-col max-h-[90vh]" id="profile-sheet">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black dark:text-white text-slate-900">My Account</h2>
-                <button onclick="closeProfileModal()" class="h-8 w-8 rounded-full glass flex items-center justify-center btn-active dark:text-white text-slate-800">
+                <h2 class="text-2xl font-black text-slate-900">My Account</h2>
+                <button onclick="closeProfileModal()" class="h-8 w-8 rounded-full glass flex items-center justify-center btn-active text-slate-800">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="glass p-4 rounded-2xl border-2 border-slate-200 dark:border-white/10 bg-white/50 dark:bg-black/40 mb-6 flex items-center gap-4">
+            <div class="glass p-4 rounded-2xl border-2 border-slate-200 bg-white/50 mb-6 flex items-center gap-4">
                 <div class="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-black">
                     <i class="fas fa-user"></i>
                 </div>
@@ -436,12 +415,6 @@
         let baseFullPrice = 0;
         let currentModalQty = 1;
 
-        // Theme Management
-        document.getElementById('themeBtn').addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-
         // Navigation Logic
         function openCategory(listId, name) {
             document.getElementById('category-view').classList.add('hidden');
@@ -459,13 +432,13 @@
                 card.style.animationDelay = `${idx * 0.1}s`;
                 card.innerHTML = `
                     <div class="flex-1">
-                        <h4 class="font-bold dark:text-white text-slate-800 text-lg leading-tight">${item.name}</h4>
+                        <h4 class="font-bold text-slate-800 text-lg leading-tight">${item.name}</h4>
                         <p class="text-success font-black mt-1">₹${item.price.toFixed(2)}</p>
                     </div>
                     <div class="relative h-24 w-24 flex-shrink-0">
                         <img src="${item.img}" class="h-full w-full object-cover rounded-2xl shadow-md border border-white/10">
                         <button onclick="openModal('${item.name}', ${item.price}, '${item.img}', '${item.category}')" 
-                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 text-primary border border-primary/20 px-4 py-1 rounded-xl font-black text-xs shadow-lg btn-active uppercase">
+                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white text-primary border border-primary/20 px-4 py-1 rounded-xl font-black text-xs shadow-lg btn-active uppercase">
                             Add
                         </button>
                     </div>
@@ -591,8 +564,8 @@
                         <div class="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center text-primary text-4xl mb-4 animate-float">
                             <i class="fas fa-shopping-basket"></i>
                         </div>
-                        <h3 class="font-bold text-lg dark:text-white text-slate-800">Your basket is empty</h3>
-                        <p class="text-slate-400 text-sm mt-1">Add something tasty to get started!</p>
+                        <h3 class="font-bold text-lg text-slate-800">Your basket is empty</h3>
+                        <p class="text-slate-500 text-sm mt-1">Add something tasty to get started!</p>
                     </div>`;
             } else {
                 cart.forEach((item, idx) => {
@@ -602,8 +575,8 @@
                     el.style.animationDelay = `${idx * 0.1}s`;
                     el.innerHTML = `
                         <div>
-                            <p class="font-bold dark:text-white text-slate-800 text-sm">${item.name}</p>
-                            <p class="text-xs text-slate-400">₹${item.unitPrice} x ${item.qty}</p>
+                            <p class="font-bold text-slate-800 text-sm">${item.name}</p>
+                            <p class="text-xs text-slate-500">₹${item.unitPrice} x ${item.qty}</p>
                         </div>
                         <p class="font-black text-success">₹${(item.unitPrice * item.qty).toFixed(2)}</p>
                     `;
@@ -656,9 +629,9 @@
 
             // Set User Details
             detailsDiv.innerHTML = `
-                <p class="font-bold text-lg dark:text-white text-slate-900">${currentUser.name}</p>
-                <p class="text-xs text-slate-500 font-medium mt-1"><i class="fas fa-phone mr-1"></i> ${currentUser.mobile}</p>
-                <p class="text-xs text-slate-500 font-medium"><i class="fas fa-envelope mr-1"></i> ${currentUser.email}</p>
+                <p class="font-bold text-lg text-slate-900">${currentUser.name}</p>
+                <p class="text-xs text-slate-600 font-medium mt-1"><i class="fas fa-phone mr-1"></i> ${currentUser.mobile}</p>
+                <p class="text-xs text-slate-600 font-medium"><i class="fas fa-envelope mr-1"></i> ${currentUser.email}</p>
             `;
 
             // Load Orders (Filter to Last 3 months)
@@ -682,12 +655,12 @@
                     const itemsStr = o.items.map(i => `${i.qty}x ${i.name}`).join(', ');
 
                     return `
-                    <div class="glass p-4 rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white/50 dark:bg-black/40 shadow-sm space-y-2">
+                    <div class="glass p-4 rounded-xl border-2 border-slate-200 bg-white/70 shadow-sm space-y-2">
                         <div class="flex justify-between items-start mb-1">
                             <span class="text-[10px] font-black tracking-widest bg-success/20 text-success px-2 py-1 rounded uppercase">${o.id}</span>
                             <span class="text-[10px] font-bold text-slate-500">${dateStr} &bull; ${timeStr}</span>
                         </div>
-                        <p class="text-sm dark:text-white text-slate-800 font-medium line-clamp-2 leading-tight">${itemsStr}</p>
+                        <p class="text-sm text-slate-800 font-medium line-clamp-2 leading-tight">${itemsStr}</p>
                         <p class="text-sm font-black text-primary mt-1">₹${o.total}</p>
                     </div>`;
                 }).join('');
