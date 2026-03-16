@@ -16,9 +16,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#fc8019',
-                        secondary: '#4a192c',
-                        success: '#1ba672',
+                        primary: '#e11d48', /* Changed to Appetizing Rose/Red */
+                        secondary: '#1e1b4b', /* Changed to Deep Indigo */
+                        success: '#10b981', /* Changed to Emerald */
                     },
                     animation: {
                         'gradient-x': 'gradient-x 15s ease infinite',
@@ -75,13 +75,13 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Background Animated Gradient */
+        /* Background Animated Gradient - Updated to match new theme */
         .bg-animated {
-            background: linear-gradient(-45deg, #1a1c2c, #4a192c, #0f2027, #2c5364);
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e293b);
             background-size: 400% 400%;
         }
         .light .bg-animated {
-            background: linear-gradient(-45deg, #f8fafc, #f1f5f9, #e2e8f0, #f8fafc);
+            background: linear-gradient(-45deg, #fff1f2, #ffe4e6, #fecdd3, #fff1f2);
         }
     </style>
 </head>
@@ -116,8 +116,8 @@
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center animate-scale-pop">0</span>
             </button>
 
-            <button onclick="handleUserClick()" class="glass h-10 w-10 sm:w-auto sm:px-4 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
-                <i class="fas fa-user-circle text-xl text-primary"></i>
+            <button id="header-user-btn" onclick="handleUserClick()" class="glass h-10 w-10 sm:w-auto sm:px-4 rounded-full flex items-center gap-2 btn-active text-slate-700 dark:text-white">
+                <i id="header-user-icon" class="fas fa-user-circle text-xl text-primary"></i>
                 <span id="header-user-name" class="hidden sm:inline font-bold">Login</span>
             </button>
         </div>
@@ -352,6 +352,37 @@
                 <button type="submit" class="w-full h-14 bg-primary text-white font-black rounded-2xl btn-active shadow-lg">Sign In Now</button>
                 <button type="button" onclick="closeAuthModal()" class="w-full py-2 text-slate-500 font-bold text-sm">Maybe Later</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Profile & Order History Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProfileModal()"></div>
+        <div class="glass w-full max-w-md rounded-[40px] p-8 relative transform scale-90 transition-transform duration-300 flex flex-col max-h-[90vh]" id="profile-sheet">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black dark:text-white text-slate-900">My Account</h2>
+                <button onclick="closeProfileModal()" class="h-8 w-8 rounded-full glass flex items-center justify-center btn-active dark:text-white text-slate-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="glass p-4 rounded-2xl border border-white/10 mb-6 flex items-center gap-4">
+                <div class="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-black">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div id="profile-user-details" class="flex-1">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <h3 class="text-sm font-black uppercase tracking-widest text-primary mb-3">Recent Orders</h3>
+            <div id="profile-order-list" class="flex-1 overflow-y-auto space-y-3 no-scrollbar mb-6 min-h-[150px]">
+                <!-- Populated by JS -->
+            </div>
+
+            <button onclick="handleLogout()" class="w-full h-14 bg-red-500/10 text-red-500 font-black rounded-2xl btn-active border border-red-500/20 hover:bg-red-500 hover:text-white transition-colors">
+                Sign Out
+            </button>
         </div>
     </div>
 
@@ -596,6 +627,16 @@
             cart.forEach(i => msg += `• ${i.qty}x ${i.name} - ₹${(i.unitPrice * i.qty).toFixed(2)}\n`);
             msg += `\n*Total: ₹${document.getElementById('cart-total-price').innerText}*\n------------------`;
             
+            // Save to Order History
+            let orders = JSON.parse(localStorage.getItem('zaikaOrders')) || [];
+            orders.unshift({
+                id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+                date: new Date().toISOString(),
+                items: cart.map(i => ({ name: i.name, qty: i.qty })),
+                total: document.getElementById('cart-total-price').innerText
+            });
+            localStorage.setItem('zaikaOrders', JSON.stringify(orders));
+
             const url = `https://wa.me/917369062084?text=${encodeURIComponent(msg)}`;
             window.open(url, '_blank');
             cart = [];
@@ -609,11 +650,67 @@
         }
 
         function showProfileModal() {
-            if(confirm(`Logged in as ${currentUser.name}\n\nWould you like to sign out?`)) {
-                localStorage.removeItem('zaikaUser');
-                currentUser = null;
-                updateHeaderUser();
+            const modal = document.getElementById('profile-modal');
+            const detailsDiv = document.getElementById('profile-user-details');
+            const orderList = document.getElementById('profile-order-list');
+
+            // Set User Details
+            detailsDiv.innerHTML = `
+                <p class="font-bold text-lg dark:text-white text-slate-900">${currentUser.name}</p>
+                <p class="text-xs text-slate-500 font-medium mt-1"><i class="fas fa-phone mr-1"></i> ${currentUser.mobile}</p>
+                <p class="text-xs text-slate-500 font-medium"><i class="fas fa-envelope mr-1"></i> ${currentUser.email}</p>
+            `;
+
+            // Load Orders (Filter to Last 3 months)
+            let orders = JSON.parse(localStorage.getItem('zaikaOrders')) || [];
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            
+            const recentOrders = orders.filter(o => new Date(o.date) >= threeMonthsAgo);
+
+            if (recentOrders.length === 0) {
+                orderList.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center opacity-50 py-6">
+                        <i class="fas fa-receipt text-3xl mb-2"></i>
+                        <p class="text-sm">No recent orders found.</p>
+                    </div>`;
+            } else {
+                orderList.innerHTML = recentOrders.map(o => {
+                    const dateObj = new Date(o.date);
+                    const dateStr = dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    const timeStr = dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                    const itemsStr = o.items.map(i => `${i.qty}x ${i.name}`).join(', ');
+
+                    return `
+                    <div class="glass p-4 rounded-xl border border-white/5 space-y-2">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-[10px] font-black tracking-widest bg-success/20 text-success px-2 py-1 rounded uppercase">${o.id}</span>
+                            <span class="text-[10px] font-bold text-slate-400">${dateStr} &bull; ${timeStr}</span>
+                        </div>
+                        <p class="text-sm dark:text-white text-slate-800 font-medium line-clamp-2 leading-tight">${itemsStr}</p>
+                        <p class="text-sm font-black text-primary mt-1">₹${o.total}</p>
+                    </div>`;
+                }).join('');
             }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('profile-sheet').classList.remove('scale-90'), 10);
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-sheet').classList.add('scale-90');
+            setTimeout(() => {
+                document.getElementById('profile-modal').classList.add('hidden');
+                document.getElementById('profile-modal').classList.remove('flex');
+            }, 300);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('zaikaUser');
+            currentUser = null;
+            updateHeaderUser();
+            closeProfileModal();
         }
 
         function showAuthModal() { 
@@ -643,7 +740,16 @@
         }
 
         function updateHeaderUser() {
-            document.getElementById('header-user-name').innerText = currentUser ? currentUser.name.split(' ')[0] : 'Login';
+            const nameEl = document.getElementById('header-user-name');
+            const iconEl = document.getElementById('header-user-icon');
+            
+            if (currentUser) {
+                nameEl.innerText = currentUser.name.split(' ')[0];
+                iconEl.className = "fas fa-user-check text-xl text-success";
+            } else {
+                nameEl.innerText = 'Login';
+                iconEl.className = "fas fa-user-circle text-xl text-primary";
+            }
         }
 
         // Initialize ETA Options
